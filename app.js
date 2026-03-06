@@ -380,10 +380,10 @@ const day1 = {
         "Walk to Lam Tsuen Wishing Tree"
       ],
       photos: [
-        "/assets/photos/tree_1.jpg", "/assets/photos/tree_2.jpg", "/assets/photos/tree_3.jpg", "/assets/photos/tree_4.jpg",
-        "/assets/photos/tree_5.jpg", "/assets/photos/tree_6.jpg", "/assets/photos/tree_7.jpg", "/assets/photos/tree_8.jpg",
-        "/assets/photos/tree_9.jpg", "/assets/photos/tree_10.jpg", "/assets/photos/tree_11.jpg", "/assets/photos/tree_12.jpg",
-        "/assets/photos/tree_13.jpg", "/assets/photos/tree_14.jpg", "/assets/photos/tree_15.jpg", "/assets/photos/tree_16.jpg"
+        "./assets/photos/tree_1.jpg", "./assets/photos/tree_2.jpg", "./assets/photos/tree_3.jpg", "./assets/photos/tree_4.jpg",
+        "./assets/photos/tree_5.jpg", "./assets/photos/tree_6.jpg", "./assets/photos/tree_7.jpg", "./assets/photos/tree_8.jpg",
+        "./assets/photos/tree_9.jpg", "./assets/photos/tree_10.jpg", "./assets/photos/tree_11.jpg", "./assets/photos/tree_12.jpg",
+        "./assets/photos/tree_13.jpg", "./assets/photos/tree_14.jpg", "./assets/photos/tree_15.jpg", "./assets/photos/tree_16.jpg"
       ],
       audio: [],
       tips: [
@@ -477,11 +477,11 @@ const day1 = {
         "Explore market → enter Man Mo Temple area"
       ],
       photos: [
-        "/assets/photos/manmo_1.jpg",
-        "/assets/photos/manmo_2.jpg",
-        "/assets/photos/manmo_3.jpg",
-        "/assets/photos/manmo_4.jpg",
-        "/assets/photos/manmo_5.jpg"
+        "./assets/photos/manmo_1.jpg",
+        "./assets/photos/manmo_2.jpg",
+        "./assets/photos/manmo_3.jpg",
+        "./assets/photos/manmo_4.jpg",
+        "./assets/photos/manmo_5.jpg"
       ],
       audio: [],
       tips: [
@@ -498,10 +498,10 @@ const day1 = {
       story: "A transport-history museum located within Tai Po’s walkable old-town cluster, making it an easy and low-impact addition to the route.",
       steps: ["Walk from Fu Shin Street area to Hong Kong Railway Museum."],
       photos: [
-        "/assets/photos/railway_1.jpg",
-        "/assets/photos/railway_2.jpg",
-        "/assets/photos/railway_3.jpg",
-        "/assets/photos/railway_4.jpg"
+        "./assets/photos/railway_1.jpg",
+        "./assets/photos/railway_2.jpg",
+        "./assets/photos/railway_3.jpg",
+        "./assets/photos/railway_4.jpg"
       ],
       audio: [],
       tips: [
@@ -653,16 +653,16 @@ const day2 = {
       title: "Sha Tin Che Kung Temple",
       subtitle: "Updated cultural stop",
       latlng: [22.3749, 114.1866],
-      story: "Chosen instead of Tao Fong Shan because it is more convenient, easier to integrate into the route, and less physically demanding for visitors.",
+      story: "One of Sha Tin’s best-known cultural landmarks, Che Kung Temple is a popular heritage site where traditional beliefs, local customs, and everyday community life still come together.",
       steps: ["Walk from museum area toward Che Kung Temple."],
       photos: [
-        "/assets/photos/chekung_1.jpg",
-        "/assets/photos/chekung_2.jpg",
-        "/assets/photos/chekung_3.jpg",
-        "/assets/photos/chekung_4.jpg",
-        "/assets/photos/chekung_5.jpg",
-        "/assets/photos/chekung_6.jpg",
-        "/assets/photos/chekung_7.jpg"
+        "./assets/photos/chekung_1.jpg",
+        "./assets/photos/chekung_2.jpg",
+        "./assets/photos/chekung_3.jpg",
+        "./assets/photos/chekung_4.jpg",
+        "./assets/photos/chekung_5.jpg",
+        "./assets/photos/chekung_6.jpg",
+        "./assets/photos/chekung_7.jpg"
       ],
       audio: [],
       tips: [
@@ -678,7 +678,7 @@ const day2 = {
       latlng: [22.381885603331025, 114.18867739120614],
       story: "A convenient mixed-use stop near the hotel, combining dining, shopping, and rest in one walkable location. Pici is located inside New Town Plaza.",
       steps: ["Walk to New Town Plaza"],
-      photos: ["/assets/photos/mall_1.jpg"],
+      photos: ["./assets/photos/mall_1.jpg"],
       audio: [],
       tips: [
         "Grouping food and leisure within one node reduces extra travel distance."
