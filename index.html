@@ -26,10 +26,12 @@
 
   <main class="layout">
     <section id="map"></section>
-    
-    <aside class="panel is-collapsed" id="infoPanel">
-      <button id="backBtn" class="panelBack" aria-label="Hide details">→</button>
 
+    <!-- Desktop floating toggle -->
+    <button id="desktopToggleBtn" class="desktopToggleBtn is-hidden" aria-label="Toggle details">←</button>
+
+    <!-- Desktop side panel -->
+    <aside class="panel is-collapsed" id="infoPanel">
       <div class="panelInner">
         <div class="stopHead">
           <div class="headText">
@@ -65,6 +67,47 @@
         </section>
       </div>
     </aside>
+
+    <!-- Mobile bottom sheet -->
+    <section id="mobileSheet" class="mobileSheet is-hidden collapsed">
+      <div id="sheetHandle" class="sheetHandle"></div>
+
+      <div class="mobileSheetHeader">
+        <div class="mobileSheetTitleWrap">
+          <div id="mobileBadge" class="badge">Day 1 (Tai Po)</div>
+          <h2 id="mobileTitle">Title</h2>
+          <p id="mobileSubtitle" class="muted">Subtitle</p>
+        </div>
+        <button id="mobileCloseBtn" class="mobileCloseBtn" aria-label="Close">✕</button>
+      </div>
+
+      <div class="mobileSheetBody">
+        <section class="card">
+          <h3>1-minute story</h3>
+          <p id="mobileStory"></p>
+        </section>
+
+        <section class="card">
+          <h3>How to get here</h3>
+          <ul id="mobileSteps" class="list"></ul>
+        </section>
+
+        <section class="card">
+          <h3>Photos</h3>
+          <div id="mobileGallery" class="gallery"></div>
+        </section>
+
+        <section class="card">
+          <h3>Local voices</h3>
+          <div id="mobileAudio"></div>
+        </section>
+
+        <section class="card">
+          <h3>Sustainability tips</h3>
+          <ul id="mobileTips" class="list"></ul>
+        </section>
+      </div>
+    </section>
   </main>
 </body>
 </html>

@@ -2,17 +2,103 @@ let map;
 let markersLayer = L.layerGroup();
 
 const panelEl = () => document.getElementById("infoPanel");
+const desktopToggleBtn = () => document.getElementById("desktopToggleBtn");
+const mobileSheet = () => document.getElementById("mobileSheet");
 
-function expandPanel() {
+function isMobileView() {
+  return window.innerWidth <= 768;
+}
+
+/* ---------- DESKTOP PANEL ---------- */
+function expandDesktopPanel() {
   panelEl().classList.remove("is-collapsed");
+  const btn = desktopToggleBtn();
+  btn.classList.remove("is-hidden");
+  btn.classList.remove("panel-collapsed");
+  btn.textContent = "→";
   setTimeout(() => map.invalidateSize(), 250);
 }
 
-function collapsePanel() {
+function collapseDesktopPanel() {
   panelEl().classList.add("is-collapsed");
+  const btn = desktopToggleBtn();
+  btn.classList.remove("is-hidden");
+  btn.classList.add("panel-collapsed");
+  btn.textContent = "←";
   setTimeout(() => map.invalidateSize(), 250);
 }
 
+function hideDesktopToggleUntilFirstOpen() {
+  desktopToggleBtn().classList.add("is-hidden");
+}
+
+/* ---------- MOBILE SHEET ---------- */
+function showMobileSheet() {
+  const sheet = mobileSheet();
+  sheet.classList.remove("is-hidden");
+  sheet.classList.remove("collapsed", "expanded");
+  sheet.classList.add("half");
+  setTimeout(() => map.invalidateSize(), 250);
+}
+
+function hideMobileSheet() {
+  const sheet = mobileSheet();
+  sheet.classList.add("is-hidden");
+  sheet.classList.remove("collapsed", "half", "expanded");
+  setTimeout(() => map.invalidateSize(), 250);
+}
+
+function setMobileSheetState(state) {
+  const sheet = mobileSheet();
+  sheet.classList.remove("collapsed", "half", "expanded");
+  sheet.classList.add(state);
+  setTimeout(() => map.invalidateSize(), 250);
+}
+
+function bindMobileSheetGestures() {
+  const sheet = mobileSheet();
+  const handle = document.getElementById("sheetHandle");
+
+  let startY = 0;
+  let endY = 0;
+
+  function onStart(y) {
+    startY = y;
+    endY = y;
+  }
+
+  function onMove(y) {
+    endY = y;
+  }
+
+  function onEnd() {
+    const dy = endY - startY;
+    if (Math.abs(dy) < 30) return;
+
+    if (dy < 0) {
+      if (sheet.classList.contains("collapsed")) setMobileSheetState("half");
+      else if (sheet.classList.contains("half")) setMobileSheetState("expanded");
+    } else {
+      if (sheet.classList.contains("expanded")) setMobileSheetState("half");
+      else if (sheet.classList.contains("half")) setMobileSheetState("collapsed");
+      else if (sheet.classList.contains("collapsed")) hideMobileSheet();
+    }
+  }
+
+  handle.addEventListener(
+    "touchstart",
+    (e) => onStart(e.touches[0].clientY),
+    { passive: true }
+  );
+  handle.addEventListener(
+    "touchmove",
+    (e) => onMove(e.touches[0].clientY),
+    { passive: true }
+  );
+  handle.addEventListener("touchend", onEnd, { passive: true });
+}
+
+/* ---------- ICONS ---------- */
 const ICON_SIZE = [34, 34];
 const ICON_ANCHOR = [17, 34];
 const POPUP_ANCHOR = [0, -30];
@@ -44,6 +130,7 @@ function getIcon(category) {
   return ICONS[category] || ICONS.museum;
 }
 
+/* ---------- DATA ---------- */
 const day1 = {
   name: "Day 1 (Tai Po)",
   color: "#68d391",
@@ -405,20 +492,18 @@ const day2 = {
   ]
 };
 
-function openStop(dayObj, stop) {
-  expandPanel();
-
-  const badge = document.getElementById("badge");
-  badge.textContent = dayObj.name;
-  badge.style.background = dayObj.color;
-
+/* ---------- RENDER STOP CONTENT ---------- */
+function renderStopContent(dayObj, stop) {
+  // desktop
+  document.getElementById("badge").textContent = dayObj.name;
+  document.getElementById("badge").style.background = dayObj.color;
   document.getElementById("stopTitle").textContent = stop.title;
   document.getElementById("stopSubtitle").textContent = stop.subtitle || "";
   document.getElementById("stopStory").textContent = stop.story || "";
 
   const stepsUl = document.getElementById("stopSteps");
   stepsUl.innerHTML = "";
-  (stop.steps || []).forEach(s => {
+  (stop.steps || []).forEach((s) => {
     const li = document.createElement("li");
     li.textContent = s;
     stepsUl.appendChild(li);
@@ -442,7 +527,7 @@ function openStop(dayObj, stop) {
   if (!stop.audio || stop.audio.length === 0) {
     audioBox.innerHTML = `<p class="muted">No audio yet.</p>`;
   } else {
-    stop.audio.forEach(a => {
+    stop.audio.forEach((a) => {
       const wrap = document.createElement("div");
       wrap.style.marginBottom = "10px";
       wrap.innerHTML = `<div class="muted">${a.label || "Audio"}</div>`;
@@ -456,18 +541,82 @@ function openStop(dayObj, stop) {
 
   const tipsUl = document.getElementById("tips");
   tipsUl.innerHTML = "";
-  (stop.tips || []).forEach(t => {
+  (stop.tips || []).forEach((t) => {
     const li = document.createElement("li");
     li.textContent = t;
     tipsUl.appendChild(li);
   });
+
+  // mobile
+  document.getElementById("mobileBadge").textContent = dayObj.name;
+  document.getElementById("mobileBadge").style.background = dayObj.color;
+  document.getElementById("mobileTitle").textContent = stop.title;
+  document.getElementById("mobileSubtitle").textContent = stop.subtitle || "";
+  document.getElementById("mobileStory").textContent = stop.story || "";
+
+  const mobileSteps = document.getElementById("mobileSteps");
+  mobileSteps.innerHTML = "";
+  (stop.steps || []).forEach((s) => {
+    const li = document.createElement("li");
+    li.textContent = s;
+    mobileSteps.appendChild(li);
+  });
+
+  const mobileGallery = document.getElementById("mobileGallery");
+  mobileGallery.innerHTML = "";
+  if (!stop.photos || stop.photos.length === 0) {
+    mobileGallery.innerHTML = `<p class="muted">No photos yet.</p>`;
+  } else {
+    stop.photos.forEach((src) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = stop.title;
+      mobileGallery.appendChild(img);
+    });
+  }
+
+  const mobileAudio = document.getElementById("mobileAudio");
+  mobileAudio.innerHTML = "";
+  if (!stop.audio || stop.audio.length === 0) {
+    mobileAudio.innerHTML = `<p class="muted">No audio yet.</p>`;
+  } else {
+    stop.audio.forEach((a) => {
+      const wrap = document.createElement("div");
+      wrap.style.marginBottom = "10px";
+      wrap.innerHTML = `<div class="muted">${a.label || "Audio"}</div>`;
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.src = a.src;
+      wrap.appendChild(audio);
+      mobileAudio.appendChild(wrap);
+    });
+  }
+
+  const mobileTips = document.getElementById("mobileTips");
+  mobileTips.innerHTML = "";
+  (stop.tips || []).forEach((t) => {
+    const li = document.createElement("li");
+    li.textContent = t;
+    mobileTips.appendChild(li);
+  });
 }
 
+function openStop(dayObj, stop) {
+  renderStopContent(dayObj, stop);
+
+  if (isMobileView()) {
+    showMobileSheet();
+  } else {
+    expandDesktopPanel();
+  }
+}
+
+/* ---------- MAP ---------- */
 function showDay(dayObj) {
   markersLayer.clearLayers();
   map.setView(dayObj.center, dayObj.zoom);
 
-  dayObj.stops.forEach(stop => {
+  dayObj.stops.forEach((stop) => {
     const marker = L.marker(stop.latlng, {
       icon: getIcon(stop.category),
       keyboard: true,
@@ -479,38 +628,64 @@ function showDay(dayObj) {
   });
 }
 
+/* ---------- INIT ---------- */
 function init() {
   map = L.map("map", { zoomControl: true });
 
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
   }).addTo(map);
 
   markersLayer.addTo(map);
 
   const day1Btn = document.getElementById("day1Btn");
   const day2Btn = document.getElementById("day2Btn");
-  const backBtn = document.getElementById("backBtn");
 
   day1Btn.addEventListener("click", () => {
     day1Btn.classList.add("active");
     day2Btn.classList.remove("active");
     showDay(day1);
-    collapsePanel();
+
+    if (isMobileView()) {
+      hideMobileSheet();
+    } else {
+      collapseDesktopPanel();
+      hideDesktopToggleUntilFirstOpen();
+    }
   });
 
   day2Btn.addEventListener("click", () => {
     day2Btn.classList.add("active");
     day1Btn.classList.remove("active");
     showDay(day2);
-    collapsePanel();
+
+    if (isMobileView()) {
+      hideMobileSheet();
+    } else {
+      collapseDesktopPanel();
+      hideDesktopToggleUntilFirstOpen();
+    }
   });
 
-  backBtn.addEventListener("click", collapsePanel);
+  document.getElementById("desktopToggleBtn").addEventListener("click", () => {
+    const collapsed = panelEl().classList.contains("is-collapsed");
+    if (collapsed) expandDesktopPanel();
+    else collapseDesktopPanel();
+  });
+
+  document.getElementById("mobileCloseBtn").addEventListener("click", hideMobileSheet);
+
+  bindMobileSheetGestures();
 
   showDay(day1);
-  collapsePanel();
+
+  if (isMobileView()) {
+    hideMobileSheet();
+  } else {
+    collapseDesktopPanel();
+    hideDesktopToggleUntilFirstOpen();
+  }
 }
 
 window.addEventListener("DOMContentLoaded", init);
