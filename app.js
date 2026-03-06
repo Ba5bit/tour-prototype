@@ -1,17 +1,20 @@
-// ---------------------------------------------
-// HK TOUR PROTOTYPE (PINS ONLY, ICON MARKERS)
-// - colorful basemap
-// - swipe/drag drawer panel to show full map
-// - MTR station pins (Sha Tin, Tai Po Market)
-// - SVG icons per stop type
-// ---------------------------------------------
-
 let map;
 let markersLayer = L.layerGroup();
 
-// ---------- ICONS ----------
+const panelEl = () => document.getElementById("infoPanel");
+
+function expandPanel() {
+  panelEl().classList.remove("is-collapsed");
+  setTimeout(() => map.invalidateSize(), 250);
+}
+
+function collapsePanel() {
+  panelEl().classList.add("is-collapsed");
+  setTimeout(() => map.invalidateSize(), 250);
+}
+
 const ICON_SIZE = [34, 34];
-const ICON_ANCHOR = [17, 34];   // bottom center touches location
+const ICON_ANCHOR = [17, 34];
 const POPUP_ANCHOR = [0, -30];
 
 function makeSvgIcon(url) {
@@ -24,169 +27,271 @@ function makeSvgIcon(url) {
 }
 
 const ICONS = {
-  train: makeSvgIcon("./assets/icons/train.svg"),
-  MTR: makeSvgIcon("./assets/icons/MTR.svg"),
+  bus: makeSvgIcon("./assets/icons/bus-stop-svgrepo-com.svg"),
+  mtr: makeSvgIcon("./assets/icons/hong-kong-metro-logo-svgrepo-com.svg"),
+  restaurant: makeSvgIcon("./assets/icons/restaurant-svgrepo-com.svg"),
+  hotel: makeSvgIcon("./assets/icons/shopping-center-svgrepo-com.svg"),
+  mall: makeSvgIcon("./assets/icons/building-big-svgrepo-com.svg"),
+  garden: makeSvgIcon("./assets/icons/garden-svgrepo-com.svg"),
+  museum: makeSvgIcon("./assets/icons/museum-svgrepo-com.svg"),
+  railway: makeSvgIcon("./assets/icons/train-svgrepo-com (1).svg"),
+  tree: makeSvgIcon("./assets/icons/tree-svgrepo-com.svg"),
   temple: makeSvgIcon("./assets/icons/temple.svg"),
-  tree: makeSvgIcon("./assets/icons/tree.svg"),
-  food: makeSvgIcon("./assets/icons/fast-food.svg"),
-  museum: makeSvgIcon("./assets/icons/museum.svg"),
+  exhibition: makeSvgIcon("./assets/icons/pavilion-svgrepo-com.svg"),
 };
 
-// Helper: pick icon by stop category
 function getIcon(category) {
   return ICONS[category] || ICONS.museum;
 }
 
-// ---------- DATA ----------
 const day1 = {
   name: "Day 1 (Tai Po)",
   color: "#68d391",
-  center: [22.448, 114.168],
-  zoom: 13,
+  center: [22.4465, 114.1698],
+  zoom: 14,
   stops: [
-    // NEW: Sha Tin Station (MTR)
+    {
+      id: "d1-hotel",
+      category: "hotel",
+      title: "Royal Park Hotel",
+      subtitle: "Trip starting point",
+      latlng: [22.379924625747798, 114.18855144136442],
+      story: "Starting point for the itinerary in Sha Tin.",
+      steps: [
+        "Walk to Sha Tin Station to begin Day 1."
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Stay close to transport hubs to reduce extra travel."
+      ]
+    },
     {
       id: "d1-shatin-mtr",
-      category: "MTR",
-      title: "Sha Tin Station (MTR)",
-      subtitle: "Start transfer point (near Royal Park Hotel)",
-      latlng: [22.3827, 114.1880], // approx
-      story: "Main MTR start point from Royal Park Hotel. You take East Rail Line to Tai Po Market.",
+      category: "mtr",
+      title: "Sha Tin Station",
+      subtitle: "Start point by MTR",
+      latlng: [22.384057872413763, 114.18796060900773],
+      story: "Main MTR start point from the Sha Tin / Royal Park Hotel area.",
       steps: [
         "Walk: Royal Park Hotel → Sha Tin Station",
-        "MTR (East Rail Line): Sha Tin → Tai Po Market"
+        "MTR: Sha Tin Station → Tai Po Market Station"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 11: Public transport reduces traffic pressure in city centers.",
-        "SDG 13: Rail has lower emissions per passenger than cars."
+        "MTR is a lower-impact transport option than private cars."
       ]
     },
-
-    // NEW: Tai Po Market Station (MTR)
     {
       id: "d1-tp-mtr",
-      category: "MTR",
-      title: "Tai Po Market Station (MTR)",
-      subtitle: "Transfer hub to Uptown Plaza bus terminus",
-      latlng: [22.444547, 114.170482], // approx
-      story: "This station is the key transfer hub. Exit and walk to Uptown Plaza Bus Terminus for KMB 64K to Lam Tsuen.",
+      category: "mtr",
+      title: "Tai Po Market Station",
+      subtitle: "Main transfer hub",
+      latlng: [22.444644933229252, 114.170447270816],
+      story: "Arrive here by MTR, then continue to the nearby bus terminus for Lam Tsuen.",
       steps: [
-        "Arrive: Tai Po Market Station",
-        "Walk: to Uptown Plaza (新達廣場) Bus Terminus"
+        "MTR arrival: Tai Po Market Station",
+        "Walk to Tai Po Market Station Bus Terminus"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 11: Concentrating transfers at hubs makes routes easier and reduces detours."
+        "Clear transfer hubs reduce confusion and random detours."
       ]
     },
-
-    // Wishing Tree
+    {
+      id: "d1-bus-terminus",
+      category: "bus",
+      title: "Tai Po Market Station Bus Terminus",
+      subtitle: "Board KMB 64K here",
+      latlng: [22.44403862026315, 114.16943657191885],
+      story: "Main bus boarding point for Lam Tsuen Wishing Tree.",
+      steps: [
+        "Board: KMB 64K",
+        "Direction: Fong Ma Po Road / Lam Tsuen"
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Bus + MTR is lower-impact than taxi transfers."
+      ]
+    },
+    {
+      id: "d1-fongmapo",
+      category: "bus",
+      title: "Fong Ma Po Road",
+      subtitle: "Bus stop for Lam Tsuen Wishing Tree",
+      latlng: [22.455548684264315, 114.14236082066064],
+      story: "Get off here for Lam Tsuen Wishing Tree.",
+      steps: [
+        "Alight: Fong Ma Po Road",
+        "Walk to Lam Tsuen Wishing Tree"
+      ],
+      photos: [],
+      audio: [],
+      tips: []
+    },
     {
       id: "d1-lamtsuen",
       category: "tree",
       title: "Lam Tsuen Wishing Tree",
-      subtitle: "Board KMB 64K → Fong Ma Po Road",
-      latlng: [22.4708, 114.1408], // approx
-      story: "A classic cultural stop. Your guide highlights boarding and alighting points so tourists don’t get lost.",
+      subtitle: "Cultural stop",
+      latlng: [22.457042875730743, 114.14248778332545],
+      story: "A signature New Territories cultural stop known for wishes and local traditions.",
       steps: [
-        "Board: Uptown Plaza Bus Terminus (Tai Po Market)",
+        "Board: Tai Po Market Station Bus Terminus",
         "Bus: KMB 64K",
-        "Alight: Fong Ma Po Road stop",
-        "Walk: short walk to the Wishing Tree"
+        "Alight: Fong Ma Po Road",
+        "Walk to Lam Tsuen Wishing Tree"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 12: Keep offerings minimal; avoid single-use plastic charms."
+        "Keep offerings minimal and avoid unnecessary waste."
       ]
     },
-
-    // Eat well canteen (food)
     {
-      id: "d1-greenhub",
-      category: "food",
-      title: "Eat Well Canteen (慧食堂) • Green Hub",
-      subtitle: "Low-carbon lunch (farm-to-table)",
-      latlng: [22.4460, 114.1687], // approx
-      story: "Sustainability anchor stop: plant-forward meal + local ingredients. Great place to show SDG tips inside the app.",
+      id: "d1-eatwell",
+      category: "restaurant",
+      title: "Eat Well Canteen",
+      subtitle: "Low-carbon lunch stop",
+      latlng: [22.446628160768036, 114.16952258561489],
+      story: "A sustainability-focused lunch stop with a farm-to-table philosophy.",
       steps: [
-        "Walk: Tai Po Market area → Green Hub (Old Tai Po Police Station)",
-        "Lunch: Seasonal organic vegetarian set + roselle tea (optional)"
+        "Walk from Tai Po Market area to Eat Well Canteen / Green Hub."
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 12: Plant-forward meals reduce food footprint.",
-        "SDG 13: Local sourcing reduces food miles."
+        "Plant-forward meals reduce food footprint."
       ]
     },
-
-    // Wun Yiu Exhibition (museum category)
     {
-      id: "d1-wunyi",
-      category: "museum",
+      id: "d1-wantau",
+      category: "bus",
+      title: "Wan Tau Street",
+      subtitle: "Transfer point toward Wun Yiu / town cluster",
+      latlng: [22.446820984381688, 114.16809774972371],
+      story: "A mapped transport point used in your Day 1 route structure.",
+      steps: [
+        "Use this point as one of the route transition markers on the itinerary."
+      ],
+      photos: [],
+      audio: [],
+      tips: []
+    },
+    {
+      id: "d1-wunyiu-road",
+      category: "bus",
+      title: "Wun Yiu Road",
+      subtitle: "Bus/minibus stop for Wun Yiu Exhibition",
+      latlng: [22.434575398173212, 114.1637299728526],
+      story: "Drop-off point for the Wun Yiu heritage area.",
+      steps: [
+        "Minibus: 23K / 23S",
+        "Alight: Wun Yiu Road"
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Heritage access via shared transport supports sustainable tourism."
+      ]
+    },
+    {
+      id: "d1-wunyiu",
+      category: "exhibition",
       title: "Wun Yiu Exhibition",
-      subtitle: "Minibus GMB 23K / 23S",
-      latlng: [22.4115, 114.1705], // approx
-      story: "Craft heritage stop. Perfect for an AR-style info card about clay, kilns, and village industry.",
+      subtitle: "Pottery heritage stop",
+      latlng: [22.437043679572863, 114.16393925263544],
+      story: "A heritage site connected to pottery history and local craft traditions.",
       steps: [
-        "Board: minibus stands near Tai Po town / Tai Po Market",
-        "Minibus: GMB 23K or 23S",
-        "Alight: Ha Wun Yiu / Wun Yiu Road area"
+        "Get off at Wun Yiu Road",
+        "Walk to Wun Yiu Exhibition"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 11: Cultural heritage = community identity.",
-        "SDG 12: Support local heritage rather than mass-produced souvenirs."
+        "Preserving craft heritage strengthens local identity."
       ]
     },
-
-    // Man Mo Temple (temple)
     {
       id: "d1-manmo",
       category: "temple",
       title: "Fu Shin Street Market + Man Mo Temple",
-      subtitle: "Temple inside a market (local-life highlight)",
-      latlng: [22.4484, 114.1701], // approx
-      story: "Man Mo Temple is embedded inside Fu Shin Street Market — visitors pass stalls/snacks/commerce first, then step into a calm temple space.",
+      subtitle: "Temple inside a market",
+      latlng: [22.4484, 114.1701],
+      story: "Man Mo Temple is embedded inside Fu Shin Street Market, combining daily local life with heritage.",
       steps: [
-        "Return from Wun Yiu toward Tai Po town (GMB 23K/23S back)",
-        "Walk: to Fu Shin Street Market (富善街)",
-        "Explore market → enter Man Mo Temple area inside the market building"
-      ],
-      photos: [
-         "./assets/photos/manmo1.jpg",
-        // "./assets/photos/d1_manmo_02.jpg"
-      ],
-      audio: [
-        // { label: "Vendor on market life (00:40)", src: "./assets/audio/manmo_vendor.mp3" }
-      ],
-      tips: [
-        "SDG 11: Markets are living heritage — respect local flow and space.",
-        "SDG 12: Bring a reusable bottle; avoid unnecessary packaging."
-      ]
-    },
-
-    // Hong Kong Railway Museum (train icon)
-    {
-      id: "d1-rail",
-      category: "train",
-      title: "Hong Kong Railway Museum",
-      subtitle: "Old-town walkable cluster",
-      latlng: [22.4496, 114.1682], // approx
-      story: "Easy to pair with Fu Shin Street as a walking cluster — less fatigue, less impact, more street-level experience.",
-      steps: [
-        "Walk: from Fu Shin Street Market through Tai Po old streets",
-        "Arrive: Railway Museum"
+        "Return from Wun Yiu toward Tai Po town",
+        "Walk to Fu Shin Street Market",
+        "Explore market → enter Man Mo Temple area"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 13: Walking is the lowest-impact transport."
+        "Living markets are part of community heritage."
+      ]
+    },
+    {
+      id: "d1-railway",
+      category: "railway",
+      title: "Hong Kong Railway Museum",
+      subtitle: "Walkable old-town cluster",
+      latlng: [22.44780136076287, 114.1644481670936],
+      story: "A transport-history museum that fits well into the old-town walking cluster.",
+      steps: [
+        "Walk from Fu Shin Street area to Hong Kong Railway Museum."
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Walking between clustered stops minimizes transport impact."
+      ]
+    },
+    {
+      id: "d1-southview",
+      category: "bus",
+      title: "Southview Villas",
+      subtitle: "Bus stop toward Billow",
+      latlng: [22.438545701934256, 114.18316901469129],
+      story: "Transit point used on the route toward the Billow dinner stop.",
+      steps: [
+        "Use this stop as a route marker for the Billow direction."
+      ],
+      photos: [],
+      audio: [],
+      tips: []
+    },
+    {
+      id: "d1-laichihang",
+      category: "bus",
+      title: "Lai Chi Hang",
+      subtitle: "Bus stop near Billow corridor",
+      latlng: [22.435675997605035, 114.18350299700893],
+      story: "Another route marker in the Tai Po Kau / Billow area.",
+      steps: [
+        "Use this stop as part of the Billow route explanation."
+      ],
+      photos: [],
+      audio: [],
+      tips: []
+    },
+    {
+      id: "d1-billow",
+      category: "restaurant",
+      title: "Billow Bar",
+      subtitle: "Dinner stop",
+      latlng: [22.43632462166475, 114.18829364010924],
+      story: "Dinner stop in the Tai Po Kau area, suitable for the end of Day 1.",
+      steps: [
+        "Route through Southview Villas / Lai Chi Hang corridor",
+        "Arrive at Billow Bar"
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Highlight plant-forward options where possible."
       ]
     }
   ]
@@ -195,79 +300,113 @@ const day1 = {
 const day2 = {
   name: "Day 2 (Sha Tin)",
   color: "#63b3ed",
-  center: [22.383, 114.189],
-  zoom: 14,
+  center: [22.3798, 114.1878],
+  zoom: 15,
   stops: [
-    // NEW: Sha Tin Station shown also on Day 2 (optional but useful)
+    {
+      id: "d2-hotel",
+      category: "hotel",
+      title: "Royal Park Hotel",
+      subtitle: "Trip starting point",
+      latlng: [22.379924625747798, 114.18855144136442],
+      story: "Start and end point for Day 2 in Sha Tin.",
+      steps: [
+        "Walk from hotel to nearby museum / station / mall cluster."
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Compact itineraries reduce travel fatigue."
+      ]
+    },
     {
       id: "d2-shatin-mtr",
-      category: "train",
-      title: "Sha Tin Station (MTR)",
-      subtitle: "Near hotel + New Town Plaza",
-      latlng: [22.3827, 114.1880], // approx
-      story: "Main station next to Royal Park Hotel area. Good anchor point for tourists.",
+      category: "mtr",
+      title: "Sha Tin Station",
+      subtitle: "Main MTR anchor point",
+      latlng: [22.384057872413763, 114.18796060900773],
+      story: "Primary MTR node in the Sha Tin part of the itinerary.",
       steps: [
         "Walk: Royal Park Hotel ↔ Sha Tin Station"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 11: Walkable access to transit makes itineraries easier and greener."
+        "MTR is a low-impact urban transport mode."
       ]
     },
-
-    // Heritage Museum (museum icon)
     {
-      id: "d2-hm",
+      id: "d2-heritage",
       category: "museum",
       title: "Hong Kong Heritage Museum",
-      subtitle: "Main visit + lunch inside",
-      latlng: [22.3777, 114.1876],
-      story: "Start Day 2 with the museum and lunch inside — efficient and tourist-friendly.",
+      subtitle: "Main Day 2 attraction",
+      latlng: [22.37686464076839, 114.18568034099643],
+      story: "Core Day 2 stop. Alchemist Cafe is inside the museum, and Pici is recommended later at New Town Plaza.",
       steps: [
-        "MTR: to Che Kung Temple Station (Tuen Ma Line)",
-        "Exit A → walk ~7 min to the museum",
-        "Lunch: The Alchemist Cafe (inside)"
+        "Visit Hong Kong Heritage Museum",
+        "Lunch suggestion: The Alchemist Cafe (inside the museum)",
+        "Later dinner/shopping suggestion: Pici at New Town Plaza"
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 11: Museums preserve community memory and identity."
+        "Museums preserve community memory and identity."
       ]
     },
-
-    // Che Kung Temple (temple icon)
+    {
+      id: "d2-garden",
+      category: "garden",
+      title: "Shing Mun River Promenade Garden",
+      subtitle: "Scenic walking stop",
+      latlng: [22.37731973054073, 114.1901384805288],
+      story: "A low-fatigue green stop that fits naturally into the Sha Tin walking loop.",
+      steps: [
+        "Walk between museum / temple / mall cluster and the promenade."
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Public green and waterfront spaces improve walkability."
+      ]
+    },
     {
       id: "d2-chekung",
       category: "temple",
       title: "Sha Tin Che Kung Temple",
-      subtitle: "Updated stop (low fatigue)",
+      subtitle: "Updated cultural stop",
       latlng: [22.3749, 114.1866],
-      story: "You replaced Tao Fong Shan with Che Kung Temple so tourists won’t get tired. Strong UX decision for the guide.",
+      story: "Chosen instead of Tao Fong Shan because it is more convenient and reduces visitor fatigue.",
       steps: [
-        "From museum area: short walk toward Che Kung Temple",
-        "Arrive: Che Kung Temple"
+        "Walk from museum area toward Che Kung Temple."
       ],
       photos: [],
       audio: [],
       tips: [
-        "SDG 13: Compact routes reduce unnecessary transport."
+        "Shorter walking loops reduce unnecessary transport."
+      ]
+    },
+    {
+      id: "d2-ntp",
+      category: "mall",
+      title: "New Town Plaza",
+      subtitle: "Mall / dining / evening stop",
+      latlng: [22.381853938550982, 114.18863903116012],
+      story: "A convenient commercial stop near the hotel. Pici is located inside New Town Plaza.",
+      steps: [
+        "Walk to New Town Plaza",
+        "Dinner suggestion: Pici (inside New Town Plaza)"
+      ],
+      photos: [],
+      audio: [],
+      tips: [
+        "Group nearby stops together to reduce travel distance."
       ]
     }
   ]
 };
 
-// ---------- PANEL ----------
-function setActive(activeBtn, otherBtn) {
-  activeBtn.classList.add("active");
-  otherBtn.classList.remove("active");
-}
-
-function openPanel(dayObj, stop) {
-  if (window.__expandPanel) window.__expandPanel();
-
-  document.getElementById("emptyState").classList.add("hidden");
-  document.getElementById("stopPanel").classList.remove("hidden");
+function openStop(dayObj, stop) {
+  expandPanel();
 
   const badge = document.getElementById("badge");
   badge.textContent = dayObj.name;
@@ -288,14 +427,12 @@ function openPanel(dayObj, stop) {
   const gallery = document.getElementById("gallery");
   gallery.innerHTML = "";
   if (!stop.photos || stop.photos.length === 0) {
-    gallery.innerHTML = `<p class="muted">Add photos later (prototype). Put files in /assets/photos/ and link them in app.js.</p>`;
+    gallery.innerHTML = `<p class="muted">No photos yet.</p>`;
   } else {
-    stop.photos.forEach((src, idx) => {
+    stop.photos.forEach((src) => {
       const img = document.createElement("img");
       img.src = src;
       img.alt = stop.title;
-      img.style.cursor = "pointer";
-      img.addEventListener("click", () => openLightbox(stop.photos, idx, stop.title)); // if you use lightbox code
       gallery.appendChild(img);
     });
   }
@@ -303,7 +440,7 @@ function openPanel(dayObj, stop) {
   const audioBox = document.getElementById("audioBox");
   audioBox.innerHTML = "";
   if (!stop.audio || stop.audio.length === 0) {
-    audioBox.innerHTML = `<p class="muted">Add voice clips later. Put MP3 files in /assets/audio/ and link them in app.js.</p>`;
+    audioBox.innerHTML = `<p class="muted">No audio yet.</p>`;
   } else {
     stop.audio.forEach(a => {
       const wrap = document.createElement("div");
@@ -326,12 +463,6 @@ function openPanel(dayObj, stop) {
   });
 }
 
-function closePanelContentOnly() {
-  document.getElementById("stopPanel").classList.add("hidden");
-  document.getElementById("emptyState").classList.remove("hidden");
-}
-
-// ---------- MAP ----------
 function showDay(dayObj) {
   markersLayer.clearLayers();
   map.setView(dayObj.center, dayObj.zoom);
@@ -343,74 +474,14 @@ function showDay(dayObj) {
       title: stop.title
     }).addTo(markersLayer);
 
-    marker.on("click", () => openPanel(dayObj, stop));
+    marker.on("click", () => openStop(dayObj, stop));
     marker.bindTooltip(stop.title, { direction: "top", opacity: 0.95 });
   });
-
-  closePanelContentOnly();
 }
 
-// ---------- DRAWER SWIPE ----------
-function enableDrawerSwipe() {
-  const panel = document.querySelector(".panel");
-  const showBtn = document.getElementById("showPanelBtn");
-  const handle = document.getElementById("drawerHandle");
-
-  let startX = 0;
-  let currentX = 0;
-  let dragging = false;
-
-  const MIN_SWIPE = 60;
-
-  function collapsePanel() {
-    panel.classList.add("is-collapsed");
-    showBtn.classList.add("show");
-    setTimeout(() => map.invalidateSize(), 250);
-  }
-
-  function expandPanel() {
-    panel.classList.remove("is-collapsed");
-    showBtn.classList.remove("show");
-    setTimeout(() => map.invalidateSize(), 250);
-  }
-
-  function onStart(clientX) { dragging = true; startX = clientX; currentX = clientX; }
-  function onMove(clientX) { if (dragging) currentX = clientX; }
-  function onEnd() {
-    if (!dragging) return;
-    dragging = false;
-    const dx = currentX - startX;
-    if (dx > MIN_SWIPE) collapsePanel();
-    if (dx < -MIN_SWIPE) expandPanel();
-  }
-
-  panel.addEventListener("touchstart", (e) => {
-    if (e.touches?.length !== 1) return;
-    onStart(e.touches[0].clientX);
-  }, { passive: true });
-
-  panel.addEventListener("touchmove", (e) => {
-    if (e.touches?.length !== 1) return;
-    onMove(e.touches[0].clientX);
-  }, { passive: true });
-
-  panel.addEventListener("touchend", onEnd, { passive: true });
-
-  handle.addEventListener("mousedown", (e) => { e.preventDefault(); onStart(e.clientX); });
-  window.addEventListener("mousemove", (e) => onMove(e.clientX));
-  window.addEventListener("mouseup", onEnd);
-
-  showBtn.addEventListener("click", expandPanel);
-
-  window.__expandPanel = expandPanel;
-  window.__collapsePanel = collapsePanel;
-}
-
-// ---------- INIT ----------
 function init() {
   map = L.map("map", { zoomControl: true });
 
-  // Colorful basemap (Carto Voyager)
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
@@ -420,31 +491,26 @@ function init() {
 
   const day1Btn = document.getElementById("day1Btn");
   const day2Btn = document.getElementById("day2Btn");
+  const backBtn = document.getElementById("backBtn");
 
   day1Btn.addEventListener("click", () => {
-    setActive(day1Btn, day2Btn);
+    day1Btn.classList.add("active");
+    day2Btn.classList.remove("active");
     showDay(day1);
+    collapsePanel();
   });
 
   day2Btn.addEventListener("click", () => {
-    setActive(day2Btn, day1Btn);
+    day2Btn.classList.add("active");
+    day1Btn.classList.remove("active");
     showDay(day2);
+    collapsePanel();
   });
 
-  document.getElementById("closeBtn").addEventListener("click", () => {
-  // hide the whole info drawer (same as swipe)
-  if (window.__collapsePanel) window.__collapsePanel();
-
-  // optional: also clear the stop content
-  closePanelContentOnly();
-});
-
-  enableDrawerSwipe();
-
-  // If you already added lightbox earlier, keep these:
-  // bindLightboxUI();
+  backBtn.addEventListener("click", collapsePanel);
 
   showDay(day1);
+  collapsePanel();
 }
 
 window.addEventListener("DOMContentLoaded", init);
