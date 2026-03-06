@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HK Low-Carbon Digital Tour (Prototype)</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="./style.css" />
+  <script defer src="./app.js"></script>
+</head>
+
+
+<div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true">
+  <div class="lightbox__backdrop" id="lightboxBackdrop"></div>
+
+  <div class="lightbox__content">
+    <button class="lightbox__btn lightbox__close" id="lightboxClose" aria-label="Close">✕</button>
+
+    <button class="lightbox__btn lightbox__prev" id="lightboxPrev" aria-label="Previous">‹</button>
+
+    <figure class="lightbox__figure">
+      <img id="lightboxImg" alt="Photo preview" />
+      <figcaption class="lightbox__caption">
+        <span id="lightboxCaption"></span>
+        <span class="lightbox__counter" id="lightboxCounter"></span>
+      </figcaption>
+    </figure>
+
+    <button class="lightbox__btn lightbox__next" id="lightboxNext" aria-label="Next">›</button>
+  </div>
+</div>
+
+<body>
+  <header class="topbar">
+    <div>
+      <div class="title">HK Low-Carbon Digital Tour</div>
+      <div class="subtitle">Prototype website • Interactive map + stop pages (photos/audio)</div>
+    </div>
+
+    <div class="tabs">
+      <button id="day1Btn" class="tab active">Day 1 (Tai Po)</button>
+      <button id="day2Btn" class="tab">Day 2 (Sha Tin)</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section id="map"></section>
+
+    <aside class="panel">
+      <!-- swipe/drag handle -->
+      <div class="drawer-handle" id="drawerHandle" title="Drag / swipe to hide or show"></div>
+
+      <div id="emptyState" class="empty">
+        <h2>Click a pin</h2>
+        <p>
+          Stop info will appear here: story, how to get there (bus/MTR),
+          photos, and local voices.
+        </p>
+        <p class="muted" style="margin-top:10px;">
+          Tip: swipe the panel right to hide it (full map), swipe left to show it again.
+        </p>
+      </div>
+
+      <div id="stopPanel" class="stop hidden">
+        <div class="stopHead">
+          <div>
+            <div id="badge" class="badge">Day 1 (Tai Po)</div>
+            <h2 id="stopTitle">Title</h2>
+            <p id="stopSubtitle" class="muted">Subtitle</p>
+          </div>
+          <button id="closeBtn" class="close" aria-label="Close panel">✕</button>
+        </div>
+
+        <section class="card">
+          <h3>1-minute story</h3>
+          <p id="stopStory"></p>
+        </section>
+
+        <section class="card">
+          <h3>How to get here</h3>
+          <ul id="stopSteps" class="list"></ul>
+        </section>
+
+        <section class="card">
+          <h3>Photos</h3>
+          <div id="gallery" class="gallery"></div>
+        </section>
+
+        <section class="card">
+          <h3>Local voices</h3>
+          <div id="audioBox"></div>
+        </section>
+
+        <section class="card">
+          <h3>Sustainability tips (SDGs 11, 12, 13)</h3>
+          <ul id="tips" class="list"></ul>
+        </section>
+      </div>
+    </aside>
+
+    <!-- floating button appears when panel is collapsed -->
+    <button class="fab" id="showPanelBtn">Show details</button>
+  </main>
+</body>
+</html>
