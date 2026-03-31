@@ -267,12 +267,14 @@ body.lightbox-open{overflow:hidden}
 .fabBtn{position:absolute;z-index:1200;width:56px;height:56px;border-radius:999px;border:1px solid rgba(120,135,158,.18);background:rgba(255,255,255,.94);box-shadow:0 14px 36px rgba(24,39,75,.14);display:grid;place-items:center;font-size:1.45rem;color:var(--text);cursor:pointer}
 .menuFab{top:24px;left:24px}
 .todoFab{top:24px;left:92px;font-size:1.2rem}
+.suggestedFab{top:24px;left:160px;font-size:1.2rem}
 .floatingControls{position:absolute;top:16px;right:16px;z-index:1200;display:flex;gap:12px;padding:0}
 .pillBtn{padding:16px 22px;border-radius:999px;border:1px solid rgba(132,163,156,.28);background:rgba(255,255,255,.94);font-size:1rem;box-shadow:0 8px 26px rgba(24,39,75,.10)}
 .pillBtn.active{background:#fff0d5;border-color:#f0be76;color:#8a5417}
 .overlayDrawer{position:absolute;z-index:1190;background:rgba(255,255,255,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(120,135,158,.16);border-radius:28px;box-shadow:0 22px 55px rgba(24,39,75,.16);padding:20px 18px;overflow:auto}
 .legendDrawer{left:24px;top:94px;width:380px;max-height:calc(100vh - 118px)}
 .todoDrawer{right:24px;bottom:24px;width:360px;max-height:min(56vh,520px)}
+.suggestedDrawer{right:24px;bottom:24px;width:380px;max-height:min(62vh,560px)}
 .drawerHead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
 .drawerHead h3{margin:2px 0 0;font-size:1.5rem;line-height:1.1}
 .drawerSectionTitle{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:#6e8b82;margin:14px 0 10px;font-weight:700}
@@ -287,8 +289,15 @@ body.lightbox-open{overflow:hidden}
 .legendFilterRow.inactive{opacity:.48}
 .legendFilterRow .filterStatus{margin-left:auto;font-size:.84rem;color:#6b7d8f}
 .checkList{display:grid;gap:12px}
-.checkItem{display:flex;gap:12px;align-items:flex-start;padding:12px 10px;border:1px solid rgba(120,135,158,.14);border-radius:18px;background:#fff}
-.checkItem input{margin-top:4px}
+.checkItem{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:flex-start;padding:12px 12px;border:1px solid rgba(120,135,158,.14);border-radius:18px;background:#fff}
+.checkItem input{margin-top:6px;accent-color:#d88a2c}
+.checkOrder{width:34px;height:34px;border-radius:999px;display:grid;place-items:center;background:#fff0d5;color:#8a5417;font-weight:800;font-size:.95rem;box-shadow:inset 0 0 0 1px rgba(240,190,118,.75)}
+.suggestedOrder{background:#fff5df}
+.suggestedItem{grid-template-columns:auto 1fr auto}
+.suggestedType{align-self:center;padding:8px 10px;border-radius:999px;background:#fff7e8;color:#8a5417;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.suggestedType-transfer{background:#eef4ff;color:#5275a0}
+.suggestedType-optional{background:#fff2df;color:#ba6b16}
+.suggestedType-stay{background:#f9f1e6;color:#8d6641}
 .checkEmpty{padding:14px 16px;border:1px dashed rgba(120,135,158,.24);border-radius:18px;background:rgba(255,255,255,.74);color:var(--muted);line-height:1.6}
 .stopTodoBtn{margin-top:14px;border:1px solid rgba(216,138,44,.24);background:rgba(255,255,255,.84);color:#8a5417;border-radius:999px;padding:12px 16px;font-weight:800;box-shadow:0 8px 20px rgba(216,138,44,.12)}
 .stopTodoBtn.is-added{background:#fff0d5;border-color:#f0be76;color:#8a5417}
@@ -332,9 +341,20 @@ body.lightbox-open{overflow:hidden}
 .tooltipImg{display:block;width:100%;height:124px;object-fit:cover;border-radius:14px;margin-bottom:10px}
 .tooltipBody{display:grid;gap:8px}
 .tooltipTitle{font-weight:800;font-size:1rem;line-height:1.2;white-space:normal;word-break:break-word}
+.tooltipSubtitle{font-size:.88rem;line-height:1.35;color:#6a7a89}
 .tooltipFootprint{font-size:.9rem;line-height:1.35;color:#4e6172;white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+.transportInfoCard{width:300px;max-width:300px;border-radius:20px;background:#fff;box-shadow:0 16px 34px rgba(24,39,75,.16);overflow:hidden}
+.tooltipTransportTag{display:inline-flex;align-items:center;width:max-content;padding:6px 10px;border-radius:999px;background:#fff2df;color:#ba6b16;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.tooltipSteps{display:grid;gap:6px}
+.tooltipStep{font-size:.88rem;line-height:1.35;color:#33485b;padding:8px 10px;border-radius:12px;background:#f7f9fb}
 .customTooltip .leaflet-tooltip{white-space:normal!important;max-width:300px!important;width:max-content;padding:12px 12px 10px;border-radius:18px;border:1px solid rgba(120,135,158,.16);box-shadow:0 16px 36px rgba(24,39,75,.18)}
 .customTooltip.leaflet-tooltip{white-space:normal!important;max-width:300px!important;width:max-content;padding:12px 12px 10px;border-radius:18px;border:1px solid rgba(120,135,158,.16);box-shadow:0 16px 36px rgba(24,39,75,.18)}
+.transportTooltip.leaflet-tooltip{background:transparent;border:0;box-shadow:none;padding:0}
+.transportTooltip.leaflet-tooltip:before{display:none}
+.transportPopup .leaflet-popup-content-wrapper{border-radius:22px;background:rgba(255,255,255,.98);box-shadow:0 18px 42px rgba(24,39,75,.18);padding:0}
+.transportPopup .leaflet-popup-content{margin:0;width:min(320px,calc(100vw - 44px))!important}
+.transportPopup .leaflet-popup-tip{background:rgba(255,255,255,.98)}
+.transportPopup .transportInfoCard{width:100%;max-width:none;border-radius:22px;overflow:hidden;box-shadow:none}
 .utilityFab{display:none}
 .utilitySheet{display:none}
 
@@ -343,22 +363,34 @@ body.lightbox-open{overflow:hidden}
   .mobileOnly{display:block}
   .menuFab{display:none}
   .todoFab{display:none}
+  .suggestedFab{display:none}
   .utilityFab{display:grid;position:absolute;z-index:1200;bottom:22px;right:84px;width:54px;height:54px;font-size:1.25rem}
   .utilityFab.secondary{right:18px}
+  .utilityFab.tertiary{right:150px}
   .floatingControls{top:14px;right:12px;gap:8px;max-width:calc(100vw - 24px)}
   .pillBtn{padding:12px 16px;font-size:.94rem}
-  .utilitySheet{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1250;background:rgba(255,255,255,.98);border-radius:24px 24px 0 0;box-shadow:0 -20px 55px rgba(24,39,75,.2);padding:10px 14px calc(18px + env(safe-area-inset-bottom));max-height:75vh;overflow:auto;transform:translateY(0)}
+  .utilitySheet{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1250;background:rgba(255,255,255,.98);border-radius:24px 24px 0 0;box-shadow:0 -20px 55px rgba(24,39,75,.2);padding:10px 14px calc(18px + env(safe-area-inset-bottom));max-height:75vh;overflow:auto;transform:translateY(0);transition:transform .24s cubic-bezier(.22,.9,.24,1);will-change:transform;touch-action:pan-y}
   .utilitySheet.hidden{display:none!important}
   .utilitySheetHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:10px}
   .utilitySheetHeader h3{margin:2px 0 0;font-size:1.3rem}
   .utilityTabs{display:flex;gap:8px;margin-bottom:12px}
   .utilityTab{flex:1;padding:12px 14px;border-radius:999px;border:1px solid rgba(120,135,158,.14);background:#fff}
   .utilityTab.active{background:#fff0d5;border-color:#f0be76;color:#8a5417}
+  .suggestedType{font-size:.68rem;padding:7px 9px}
   .stopPageShell{padding:14px 14px 30px}
   .stopPageGrid{grid-template-columns:1fr}
   .stopPageTopbar{padding-top:0}
   .stopPageHero h1{max-width:none;font-size:2.25rem}
   .tooltipCard,.customTooltip{display:none!important}
+  .transportTooltip{display:block!important}
+  .transportTooltip .leaflet-tooltip{display:block!important}
+  .transportPopup .leaflet-popup-content-wrapper,
+  .transportPopup .leaflet-popup-content,
+  .transportPopup .transportInfoCard{display:block!important}
+  .transportPopup .leaflet-popup-content{width:min(280px,calc(100vw - 32px))!important}
+  .transportPopup .tooltipBody{padding:14px}
+  .transportPopup .tooltipTitle{font-size:1rem}
+  .transportPopup .tooltipSubtitle,.transportPopup .tooltipStep{font-size:.84rem}
 }
 
 /* ===== Landing page redesign ===== */

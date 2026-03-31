@@ -20,6 +20,8 @@ let activeLightboxTitle = "";
 let activeCategories = new Set();
 let legendCollapsed = false;
 let selectedLandingDay = "day1";
+let utilityMode = "filters";
+let utilitySheetHideTimer = null;
 
 function isMobileView() {
   const landscapeCompact = window.matchMedia("(orientation: landscape) and (max-height: 520px)").matches;
@@ -798,6 +800,14 @@ function getPreviewPhoto(stop) {
   `);
 }
 
+function isTransportStop(stop) {
+  return stop?.category === "bus" || stop?.category === "mtr";
+}
+
+function getTransportTooltipSteps(stop) {
+  return (stop.steps || []).filter(Boolean).slice(0, 4);
+}
+
 function saveChecklistState(dayKey, index, checked) {
   localStorage.setItem(`tour-check-${dayKey}-${index}`, checked ? "1" : "0");
 }
@@ -826,6 +836,17 @@ function saveTodoIds(dayObj, ids) {
 
 function isStopInTodo(dayObj, stop) {
   return loadTodoIds(dayObj).includes(stop.id);
+}
+
+function getTodoOrder(dayObj, stop) {
+  return loadTodoIds(dayObj).indexOf(stop.id) + 1;
+}
+
+function getOrderedTodoStops(dayObj) {
+  const stopById = new Map(dayObj.stops.map((stop) => [stop.id, stop]));
+  return loadTodoIds(dayObj)
+    .map((id) => stopById.get(id))
+    .filter(Boolean);
 }
 
 function toggleStopTodo(dayObj, stop) {
@@ -1161,6 +1182,20 @@ function renderDefaultDayInfo(dayObj) {
 }
 
 function tooltipHtml(stop) {
+  if (isTransportStop(stop)) {
+    const steps = getTransportTooltipSteps(stop);
+    return `
+      <div class="transportInfoCard">
+        <div class="tooltipBody">
+          <div class="tooltipTransportTag">${stop.category === "mtr" ? "MTR connection" : "Bus connection"}</div>
+          <div class="tooltipTitle">${stop.title}</div>
+          <div class="tooltipSubtitle">${stop.subtitle || ""}</div>
+          ${steps.length ? `<div class="tooltipSteps">${steps.map((step) => `<div class="tooltipStep">${step}</div>`).join("")}</div>` : ""}
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="tooltipCard">
       <img class="tooltipImg" src="${getPreviewPhoto(stop)}" alt="${stop.title} preview" />
@@ -1221,15 +1256,40 @@ function showDay(dayObj) {
       title: stop.title
     }).addTo(markersLayer);
 
-    marker.on("click", () => openStop(dayObj, stop));
+    const tooltipOptions = {
+      direction: "top",
+      opacity: 1,
+      className: isTransportStop(stop) ? "customTooltip transportTooltip" : "customTooltip",
+      offset: [0, -14]
+    };
 
-    if (!isMobileView()) {
-      marker.bindTooltip(tooltipHtml(stop), {
-        direction: "top",
-        opacity: 1,
-        className: "customTooltip",
-        offset: [0, -14]
+    if (isTransportStop(stop)) {
+      if (isMobileView()) {
+        marker.bindPopup(tooltipHtml(stop), {
+          className: "transportPopup",
+          autoPan: true,
+          autoPanPadding: [18, 18],
+          closeButton: false,
+          maxWidth: 320,
+          minWidth: 220,
+          offset: [0, -12]
+        });
+      } else {
+        marker.bindTooltip(tooltipHtml(stop), tooltipOptions);
+      }
+      marker.on("click", () => {
+        currentStop = null;
+        closeStopPage();
+        if (isMobileView()) marker.openPopup();
+        else marker.openTooltip();
+        map.flyTo(stop.latlng, Math.max(map.getZoom(), 15), { duration: 0.35 });
       });
+    } else {
+      marker.on("click", () => openStop(dayObj, stop));
+
+      if (!isMobileView()) {
+        marker.bindTooltip(tooltipHtml(stop), tooltipOptions);
+      }
     }
   });
 
@@ -1242,6 +1302,16 @@ function showDay(dayObj) {
 }
 
 function bindLanding() {
+  document.querySelectorAll('.siteNavLinks a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const targetId = link.getAttribute("href");
+      const target = targetId ? document.querySelector(targetId) : null;
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
   document.querySelectorAll("[data-day-toggle]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const dayKey = btn.getAttribute("data-day-toggle");
@@ -1355,6 +1425,294 @@ function bindMapUi() {
     if (!currentDay || !currentStop) return;
     toggleStopTodo(currentDay, currentStop);
   });
+}
+
+function updateStopTodoButton(dayObj, stop) {
+  const btn = document.getElementById("stopTodoBtn");
+  if (!btn || !dayObj || !stop) return;
+  const order = getTodoOrder(dayObj, stop);
+  const added = order > 0;
+  btn.classList.toggle("is-added", added);
+  btn.textContent = added ? `✓ Added as stop #${order}` : "✓ Add to to-do list";
+  btn.setAttribute("aria-pressed", added ? "true" : "false");
+}
+
+function renderChecklist(container, dayObj) {
+  if (!container || !dayObj) return;
+  const items = getOrderedTodoStops(dayObj);
+  container.innerHTML = "";
+
+  if (!items.length) {
+    container.innerHTML = `<div class="checkEmpty">Your to-do list is empty. Open a stop and add it with the check button.</div>`;
+    return;
+  }
+
+  items.forEach((stop, index) => {
+    const row = document.createElement("div");
+    row.className = "checkItem";
+    row.innerHTML = `
+      <div class="checkOrder">${index + 1}</div>
+      <div class="checkText">
+        <div class="checkTitle">${stop.title}</div>
+        <div class="checkMeta">${stop.subtitle || dayObj.name}</div>
+      </div>
+      <input type="checkbox" checked aria-label="Remove ${stop.title} from your to-do list" />
+    `;
+    const checkbox = row.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      toggleStopTodo(dayObj, stop);
+      if (currentStop?.id === stop.id && currentDay === dayObj) updateStopTodoButton(dayObj, stop);
+    });
+    container.appendChild(row);
+  });
+}
+
+function renderSuggestedChecklist(container, dayObj) {
+  if (!container || !dayObj) return;
+  const items = routePlans[getDayKey(dayObj)] || [];
+  container.innerHTML = "";
+
+  items.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "checkItem suggestedItem";
+    row.innerHTML = `
+      <div class="checkOrder suggestedOrder">${index + 1}</div>
+      <div class="checkText">
+        <div class="checkTitle">${item.label}</div>
+        <div class="checkMeta">${item.meta || ""}</div>
+      </div>
+      <div class="suggestedType suggestedType-${item.type}">${item.type}</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function updateChecklistPanels(dayObj) {
+  renderChecklist(document.getElementById("routeChecklist"), dayObj);
+  renderChecklist(document.getElementById("mobileChecklist"), dayObj);
+  renderSuggestedChecklist(document.getElementById("suggestedChecklist"), dayObj);
+  renderSuggestedChecklist(document.getElementById("mobileSuggestedChecklist"), dayObj);
+}
+
+function renderDefaultDayInfo(dayObj) {
+  const titleEl = document.getElementById("stopTitle");
+  if (!titleEl) return;
+  document.getElementById("badge").textContent = dayObj.name;
+  document.getElementById("badge").style.background = dayObj.color;
+  titleEl.textContent = dayObj.name;
+  document.getElementById("stopSubtitle").textContent = "Select a marker to open a full stop page.";
+  document.getElementById("stopStory").textContent = "Each place opens as its own full page, where you can review photos, story notes, and decide whether to save it for your trip.";
+  document.getElementById("stopFootprint").textContent = "Use the map tools for filters, then add the stops you actually want into your own to-do list.";
+  document.getElementById("gallery").innerHTML = `<p class="muted">Open a stop to browse photos.</p>`;
+  document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to hear local voices.</p>`;
+  document.getElementById("tips").innerHTML = `<li>Build your own to-do list by adding stops from their individual pages.</li>`;
+  const todoBtn = document.getElementById("stopTodoBtn");
+  if (todoBtn) {
+    todoBtn.classList.remove("is-added");
+    todoBtn.textContent = "✓ Add to to-do list";
+    todoBtn.setAttribute("aria-pressed", "false");
+  }
+}
+
+function showLanding() {
+  mapViewEl().classList.add("hidden");
+  landingViewEl().classList.remove("hidden");
+  closeStopPage();
+  closeLegendDrawer();
+  closeTodoDrawer();
+  closeSuggestedDrawer();
+  closeMobileUtilitySheet();
+}
+
+function openLegendDrawer() {
+  closeTodoDrawer();
+  closeSuggestedDrawer();
+  document.getElementById("legendDrawer")?.classList.remove("hidden");
+}
+
+function closeLegendDrawer() {
+  document.getElementById("legendDrawer")?.classList.add("hidden");
+}
+
+function openTodoDrawer() {
+  closeLegendDrawer();
+  closeSuggestedDrawer();
+  document.getElementById("todoDrawer")?.classList.remove("hidden");
+}
+
+function closeTodoDrawer() {
+  document.getElementById("todoDrawer")?.classList.add("hidden");
+}
+
+function openSuggestedDrawer() {
+  closeLegendDrawer();
+  closeTodoDrawer();
+  document.getElementById("suggestedDrawer")?.classList.remove("hidden");
+}
+
+function closeSuggestedDrawer() {
+  document.getElementById("suggestedDrawer")?.classList.add("hidden");
+}
+
+function setUtilityMode(mode) {
+  utilityMode = mode;
+  document.getElementById("utilityTabFilters")?.classList.toggle("active", mode === "filters");
+  document.getElementById("utilityTabTodo")?.classList.toggle("active", mode === "todo");
+  document.getElementById("utilityTabSuggested")?.classList.toggle("active", mode === "suggested");
+  document.getElementById("utilityFiltersPane")?.classList.toggle("hidden", mode !== "filters");
+  document.getElementById("utilityTodoPane")?.classList.toggle("hidden", mode !== "todo");
+  document.getElementById("utilitySuggestedPane")?.classList.toggle("hidden", mode !== "suggested");
+
+  const eyebrow = document.getElementById("utilitySheetEyebrow");
+  const title = document.getElementById("utilitySheetTitle");
+
+  if (eyebrow) {
+    eyebrow.textContent = mode === "filters"
+      ? "Map legend"
+      : mode === "todo"
+        ? "Your route"
+        : "Suggested itinerary";
+  }
+
+  if (title) {
+    title.textContent = mode === "filters"
+      ? "Show or hide categories"
+      : mode === "todo"
+        ? "Your ordered to-do list"
+        : "Follow our recommended flow";
+  }
+}
+
+function resetMobileUtilitySheetPosition(animate = true) {
+  const sheet = document.getElementById("mobileUtilitySheet");
+  if (!sheet) return;
+  sheet.style.transition = animate ? "transform 240ms cubic-bezier(.22,.9,.24,1)" : "none";
+  sheet.style.transform = "translateY(0px)";
+}
+
+function openMobileUtilitySheet(mode = "filters") {
+  const sheet = document.getElementById("mobileUtilitySheet");
+  if (!sheet) return;
+  if (utilitySheetHideTimer) {
+    clearTimeout(utilitySheetHideTimer);
+    utilitySheetHideTimer = null;
+  }
+  setUtilityMode(mode);
+  sheet.classList.remove("hidden");
+  resetMobileUtilitySheetPosition(false);
+  requestAnimationFrame(() => resetMobileUtilitySheetPosition(true));
+  setMobileBackdrop(true);
+}
+
+function closeMobileUtilitySheet() {
+  const sheet = document.getElementById("mobileUtilitySheet");
+  if (!sheet) return;
+  if (utilitySheetHideTimer) clearTimeout(utilitySheetHideTimer);
+  sheet.style.transition = "transform 220ms cubic-bezier(.22,.9,.24,1)";
+  sheet.style.transform = "translateY(100%)";
+  setMobileBackdrop(false);
+  utilitySheetHideTimer = window.setTimeout(() => {
+    sheet.classList.add("hidden");
+    sheet.style.transition = "";
+    sheet.style.transform = "";
+    utilitySheetHideTimer = null;
+  }, 220);
+}
+
+function bindMobileUtilitySheetGestures() {
+  const sheet = document.getElementById("mobileUtilitySheet");
+  const handle = document.getElementById("utilitySheetHandle");
+  const header = sheet?.querySelector(".utilitySheetHeader");
+  const tabs = sheet?.querySelector(".utilityTabs");
+  const dragTargets = [handle, header, tabs].filter(Boolean);
+
+  if (!sheet || !dragTargets.length) return;
+
+  let startY = 0;
+  let startX = 0;
+  let currentY = 0;
+  let dragging = false;
+
+  const startDrag = (touch) => {
+    if (sheet.classList.contains("hidden")) return;
+    dragging = true;
+    startY = touch.clientY;
+    startX = touch.clientX;
+    currentY = 0;
+    sheet.style.transition = "none";
+  };
+
+  const moveDrag = (touch, event) => {
+    if (!dragging) return;
+    const deltaY = touch.clientY - startY;
+    const deltaX = touch.clientX - startX;
+    if (deltaY <= 0 || Math.abs(deltaY) < Math.abs(deltaX)) {
+      currentY = 0;
+      sheet.style.transform = "translateY(0px)";
+      return;
+    }
+    currentY = deltaY;
+    sheet.style.transform = `translateY(${deltaY}px)`;
+    event.preventDefault();
+  };
+
+  const endDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    if (currentY > 90) closeMobileUtilitySheet();
+    else resetMobileUtilitySheetPosition(true);
+  };
+
+  dragTargets.forEach((target) => {
+    target.addEventListener("touchstart", (event) => {
+      if (event.touches?.length !== 1) return;
+      startDrag(event.touches[0]);
+    }, { passive: true });
+
+    target.addEventListener("touchmove", (event) => {
+      if (event.touches?.length !== 1) return;
+      moveDrag(event.touches[0], event);
+    }, { passive: false });
+
+    target.addEventListener("touchend", endDrag, { passive: true });
+    target.addEventListener("touchcancel", endDrag, { passive: true });
+  });
+}
+
+function bindMapUi() {
+  document.getElementById("day1Btn")?.addEventListener("click", () => switchDay(day1));
+  document.getElementById("day2Btn")?.addEventListener("click", () => switchDay(day2));
+  document.getElementById("backToLandingBtn")?.addEventListener("click", showLanding);
+  document.getElementById("menuToggleBtn")?.addEventListener("click", () => {
+    if (document.getElementById("legendDrawer")?.classList.contains("hidden")) openLegendDrawer();
+    else closeLegendDrawer();
+  });
+  document.getElementById("todoToggleBtn")?.addEventListener("click", () => {
+    if (document.getElementById("todoDrawer")?.classList.contains("hidden")) openTodoDrawer();
+    else closeTodoDrawer();
+  });
+  document.getElementById("suggestedToggleBtn")?.addEventListener("click", () => {
+    if (document.getElementById("suggestedDrawer")?.classList.contains("hidden")) openSuggestedDrawer();
+    else closeSuggestedDrawer();
+  });
+  document.getElementById("legendCloseBtn")?.addEventListener("click", closeLegendDrawer);
+  document.getElementById("todoCloseBtn")?.addEventListener("click", closeTodoDrawer);
+  document.getElementById("suggestedCloseBtn")?.addEventListener("click", closeSuggestedDrawer);
+  document.getElementById("mobileFilterFab")?.addEventListener("click", () => openMobileUtilitySheet("filters"));
+  document.getElementById("mobileTodoFab")?.addEventListener("click", () => openMobileUtilitySheet("todo"));
+  document.getElementById("mobileSuggestedFab")?.addEventListener("click", () => openMobileUtilitySheet("suggested"));
+  document.getElementById("mobileUtilityCloseBtn")?.addEventListener("click", closeMobileUtilitySheet);
+  document.getElementById("utilityTabFilters")?.addEventListener("click", () => setUtilityMode("filters"));
+  document.getElementById("utilityTabTodo")?.addEventListener("click", () => setUtilityMode("todo"));
+  document.getElementById("utilityTabSuggested")?.addEventListener("click", () => setUtilityMode("suggested"));
+  mobileBackdropEl()?.addEventListener("click", closeMobileUtilitySheet);
+  document.getElementById("stopPageBackBtn")?.addEventListener("click", closeStopPage);
+  document.getElementById("stopPageIntroBtn")?.addEventListener("click", showLanding);
+  document.getElementById("stopTodoBtn")?.addEventListener("click", () => {
+    if (!currentDay || !currentStop) return;
+    toggleStopTodo(currentDay, currentStop);
+  });
+  bindMobileUtilitySheetGestures();
 }
 
 function initMap() {

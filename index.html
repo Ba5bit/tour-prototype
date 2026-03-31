@@ -220,6 +220,9 @@
       <button id="todoToggleBtn" class="fabBtn todoFab desktopOnly" aria-label="Open route to-do list">
         ✓
       </button>
+      <button id="suggestedToggleBtn" class="fabBtn suggestedFab desktopOnly" aria-label="Open suggested itinerary">
+        ✦
+      </button>
 
       <div class="floatingControls" role="group" aria-label="Map controls">
         <button id="backToLandingBtn" class="pillBtn">← Intro</button>
@@ -243,7 +246,7 @@
       <aside id="todoDrawer" class="overlayDrawer todoDrawer hidden desktopOnly">
         <div class="drawerHead">
           <div>
-            <div class="legendEyebrow">Optional plan</div>
+            <div class="legendEyebrow">Your route</div>
             <h3>Route to-do list</h3>
           </div>
           <button id="todoCloseBtn" class="ghostBtn small">Close</button>
@@ -251,8 +254,20 @@
         <div id="routeChecklist" class="checkList"></div>
       </aside>
 
+      <aside id="suggestedDrawer" class="overlayDrawer suggestedDrawer hidden desktopOnly">
+        <div class="drawerHead">
+          <div>
+            <div class="legendEyebrow">Suggested itinerary</div>
+            <h3>Follow our recommended flow</h3>
+          </div>
+          <button id="suggestedCloseBtn" class="ghostBtn small">Close</button>
+        </div>
+        <div id="suggestedChecklist" class="checkList"></div>
+      </aside>
+
       <button id="mobileFilterFab" class="fabBtn utilityFab mobileOnly" aria-label="Open map filters">☰</button>
       <button id="mobileTodoFab" class="fabBtn utilityFab secondary mobileOnly" aria-label="Open route to-do list">✓</button>
+      <button id="mobileSuggestedFab" class="fabBtn utilityFab tertiary mobileOnly" aria-label="Open suggested itinerary">✦</button>
 
       <section id="mobileUtilitySheet" class="utilitySheet mobileOnly hidden">
         <div id="utilitySheetHandle" class="sheetHandle"></div>
@@ -266,6 +281,7 @@
         <div class="utilityTabs">
           <button id="utilityTabFilters" class="utilityTab active">Filters</button>
           <button id="utilityTabTodo" class="utilityTab">To-do list</button>
+          <button id="utilityTabSuggested" class="utilityTab">Suggested</button>
         </div>
         <div id="utilityFiltersPane" class="utilityPane">
           <div id="mobileLegendStaticList" class="legendStaticList compact"></div>
@@ -273,6 +289,9 @@
         </div>
         <div id="utilityTodoPane" class="utilityPane hidden">
           <div id="mobileChecklist" class="checkList"></div>
+        </div>
+        <div id="utilitySuggestedPane" class="utilityPane hidden">
+          <div id="mobileSuggestedChecklist" class="checkList"></div>
         </div>
       </section>
 
