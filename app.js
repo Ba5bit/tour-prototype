@@ -1,18 +1,25 @@
+
 let map;
 let markersLayer = L.layerGroup();
 
 const panelEl = () => document.getElementById("infoPanel");
-const desktopToggleBtn = () => document.getElementById("desktopToggleBtn");
+const menuToggleBtn = () => document.getElementById("menuToggleBtn");
 const mobileSheetEl = () => document.getElementById("mobileSheet");
 const mobileSheetBodyEl = () => document.getElementById("mobileSheetBody");
 const mobileBackdropEl = () => document.getElementById("mobileBackdrop");
+const landingViewEl = () => document.getElementById("landingView");
+const mapViewEl = () => document.getElementById("mapView");
 
 let mobileHideTimer = null;
-let mobileState = "hidden"; // hidden | peek | half | full
+let mobileState = "hidden";
 let currentDay = null;
+let currentStop = null;
 let lightboxPhotos = [];
 let lightboxIndex = 0;
 let activeLightboxTitle = "";
+let activeCategories = new Set();
+let legendCollapsed = false;
+let selectedLandingDay = "day1";
 
 function isMobileView() {
   const landscapeCompact = window.matchMedia("(orientation: landscape) and (max-height: 520px)").matches;
@@ -26,25 +33,17 @@ function refreshMapSize() {
 
 /* ---------- DESKTOP ---------- */
 function expandDesktopPanel() {
-  panelEl().classList.remove("panel-collapsed");
-  const btn = desktopToggleBtn();
-  btn.classList.remove("is-hidden");
-  btn.classList.add("panel-open");
-  btn.textContent = "→";
+  const panel = panelEl();
+  if (!panel) return;
+  panel.classList.remove("panel-collapsed");
   setTimeout(refreshMapSize, 240);
 }
 
 function collapseDesktopPanel() {
-  panelEl().classList.add("panel-collapsed");
-  const btn = desktopToggleBtn();
-  btn.classList.remove("is-hidden");
-  btn.classList.remove("panel-open");
-  btn.textContent = "←";
+  const panel = panelEl();
+  if (!panel) return;
+  panel.classList.add("panel-collapsed");
   setTimeout(refreshMapSize, 240);
-}
-
-function hideDesktopToggleUntilFirstOpen() {
-  desktopToggleBtn().classList.add("is-hidden");
 }
 
 /* ---------- MOBILE ---------- */
@@ -52,8 +51,8 @@ function getMobileOffsets() {
   const vh = window.innerHeight;
   return {
     hidden: vh + 24,
-    peek: Math.round(vh * 0.68),
-    half: Math.round(vh * 0.34),
+    peek: Math.round(vh * 0.70),
+    half: Math.round(vh * 0.36),
     full: 12
   };
 }
@@ -61,7 +60,7 @@ function getMobileOffsets() {
 function setMobileBackdrop(isVisible) {
   const backdrop = mobileBackdropEl();
   if (!backdrop) return;
-  backdrop.classList.toggle('visible', !!isVisible);
+  backdrop.classList.toggle("is-open", !!isVisible);
 }
 
 function setMobilePosition(px, animate = true) {
@@ -72,47 +71,41 @@ function setMobilePosition(px, animate = true) {
 }
 
 function syncMobileSheetModeClasses(state) {
-  document.body.classList.toggle('has-mobile-sheet', state !== 'hidden');
-  document.body.classList.toggle('has-mobile-sheet-full', state === 'full');
+  document.body.classList.toggle("has-mobile-sheet", state !== "hidden");
+  document.body.classList.toggle("has-mobile-sheet-full", state === "full");
 }
 
 function openMobileSheet(state = "peek", animate = true) {
   const sheet = mobileSheetEl();
-  const offsets = getMobileOffsets();
   if (!sheet) return;
-
   if (mobileHideTimer) {
     clearTimeout(mobileHideTimer);
     mobileHideTimer = null;
   }
-
   mobileState = state;
   sheet.classList.remove("hidden");
   sheet.dataset.state = state;
-  setMobilePosition(offsets[state], animate);
-  setMobileBackdrop(state !== 'hidden');
+  setMobilePosition(getMobileOffsets()[state], animate);
+  setMobileBackdrop(state !== "hidden");
   syncMobileSheetModeClasses(state);
   setTimeout(refreshMapSize, 340);
 }
 
 function closeMobileSheet() {
   const sheet = mobileSheetEl();
-  const offsets = getMobileOffsets();
   if (!sheet) return;
-
   if (mobileHideTimer) {
     clearTimeout(mobileHideTimer);
     mobileHideTimer = null;
   }
-
   mobileState = "hidden";
-  sheet.dataset.state = 'hidden';
+  sheet.dataset.state = "hidden";
   setMobileBackdrop(false);
-  setMobilePosition(offsets.hidden, true);
+  setMobilePosition(getMobileOffsets().hidden, true);
 
   mobileHideTimer = setTimeout(() => {
     sheet.classList.add("hidden");
-    syncMobileSheetModeClasses('hidden');
+    syncMobileSheetModeClasses("hidden");
     mobileHideTimer = null;
     refreshMapSize();
   }, 330);
@@ -145,7 +138,6 @@ function bindMobileSheetGestures() {
       ["peek", o.peek],
       ["hidden", o.hidden]
     ];
-
     let nearest = "peek";
     let nearestDist = Infinity;
     for (const [name, value] of snapPoints) {
@@ -171,88 +163,46 @@ function bindMobileSheetGestures() {
     if (!dragging) return;
     const o = offsets();
     const delta = y - startY;
-    currentOffset = startOffset + delta;
-
-    if (currentOffset < o.full) currentOffset = o.full;
-    if (currentOffset > o.hidden) currentOffset = o.hidden;
-
+    currentOffset = Math.min(Math.max(startOffset + delta, o.full), o.hidden);
     sheet.style.transform = `translateY(${currentOffset}px)`;
   }
 
   function endDrag() {
     if (!dragging) return;
     dragging = false;
-
     const next = nearestState(currentOffset);
-    if (next === 'hidden') closeMobileSheet();
+    if (next === "hidden") closeMobileSheet();
     else openMobileSheet(next, true);
   }
 
   [handle, header].forEach((el) => {
     if (!el) return;
     el.addEventListener("touchstart", (e) => {
-      if (!e.touches || e.touches.length !== 1) return;
+      if (e.touches?.length !== 1) return;
       startDrag(e.touches[0].clientY);
     }, { passive: true });
-
     el.addEventListener("touchmove", (e) => {
-      if (!e.touches || e.touches.length !== 1) return;
+      if (e.touches?.length !== 1) return;
       moveDrag(e.touches[0].clientY);
     }, { passive: false });
-
     el.addEventListener("touchend", endDrag, { passive: true });
   });
 
-  if (handle) {
-    handle.addEventListener('click', () => {
-      if (mobileState === 'half') openMobileSheet('full', true);
-      else if (mobileState === 'peek') openMobileSheet('half', true);
-      else if (mobileState === 'full') openMobileSheet('half', true);
-    });
-  }
+  handle?.addEventListener("click", () => {
+    if (mobileState === "half") openMobileSheet("full", true);
+    else if (mobileState === "peek") openMobileSheet("half", true);
+    else if (mobileState === "full") openMobileSheet("half", true);
+  });
 
-  if (header) {
-    header.addEventListener('dblclick', () => {
-      openMobileSheet(mobileState === 'full' ? 'half' : 'full', true);
-    });
-  }
+  header?.addEventListener("dblclick", () => {
+    openMobileSheet(mobileState === "full" ? "half" : "full", true);
+  });
 
-  if (body) {
-    let bodyDragStartY = 0;
-    let bodyDragging = false;
+  body?.addEventListener("touchend", () => {
+    if (dragging) endDrag();
+  }, { passive: true });
 
-    body.addEventListener('scroll', () => {
-      if (mobileState === 'peek' && body.scrollTop > 8) {
-        openMobileSheet('half', true);
-      }
-    }, { passive: true });
-
-    body.addEventListener('touchstart', (e) => {
-      if (!e.touches || e.touches.length !== 1) return;
-      bodyDragStartY = e.touches[0].clientY;
-      bodyDragging = body.scrollTop <= 0;
-    }, { passive: true });
-
-    body.addEventListener('touchmove', (e) => {
-      if (!bodyDragging || body.scrollTop > 0 || !e.touches || e.touches.length !== 1) return;
-      const delta = e.touches[0].clientY - bodyDragStartY;
-      if (delta > 12) {
-        startDrag(bodyDragStartY);
-        moveDrag(e.touches[0].clientY);
-        bodyDragging = false;
-      }
-    }, { passive: true });
-
-    body.addEventListener('touchend', () => {
-      if (dragging) endDrag();
-      bodyDragging = false;
-    }, { passive: true });
-  }
-
-  const backdrop = mobileBackdropEl();
-  if (backdrop) {
-    backdrop.addEventListener('click', closeMobileSheet);
-  }
+  mobileBackdropEl()?.addEventListener("click", closeMobileSheet);
 }
 
 /* ---------- ICONS ---------- */
@@ -290,7 +240,7 @@ function getIcon(category) {
 /* ---------- DATA ---------- */
 const day1 = {
   name: "Day 1 (Tai Po)",
-  color: "#68d391",
+  color: "#d97d2f",
   center: [22.4465, 114.1698],
   zoom: 14,
   stops: [
@@ -555,7 +505,7 @@ const day1 = {
 
 const day2 = {
   name: "Day 2 (Sha Tin)",
-  color: "#63b3ed",
+  color: "#e5ac3a",
   center: [22.3798, 114.1878],
   zoom: 15,
   stops: [
@@ -688,6 +638,366 @@ const day2 = {
 };
 
 /* ---------- RENDER ---------- */
+
+const routePlans = {
+  day1: [
+    { type: "stay", label: "Start at Royal Park Hotel", meta: "Prepare for a public-transport first day." },
+    { type: "transfer", label: "MTR + bus/minibus into Tai Po", meta: "Use rail first, then local public transport." },
+    { type: "stop", label: "Lam Tsuen", meta: "Main heritage and village stop." },
+    { type: "optional", label: "Man Mo Temple", meta: "Optional stop inside the market district." },
+    { type: "stop", label: "Hong Kong Railway Museum", meta: "Easy walkable cultural stop." },
+    { type: "optional", label: "Tai Po Market free exploration", meta: "Optional local wandering time." },
+    { type: "transfer", label: "Return by MTR to Sha Tin", meta: "Simple rail transfer back." },
+    { type: "stop", label: "Ten Thousand Buddhas Monastery", meta: "Optional higher-effort cultural climb before ending the day." },
+    { type: "stay", label: "Return to hotel", meta: "End of Day 1." }
+  ],
+  day2: [
+    { type: "stay", label: "Start at Royal Park Hotel", meta: "Compact walking-focused second day." },
+    { type: "stop", label: "Hong Kong Heritage Museum", meta: "Main cultural anchor for the day." },
+    { type: "stop", label: "Che Kung Temple", meta: "Classic heritage stop in Sha Tin." },
+    { type: "optional", label: "Free exploration around Sha Tin", meta: "Use the riverfront, mall, or cafe cluster as you like." },
+    { type: "stay", label: "Leave / end route", meta: "Flexible finish depending on your schedule." }
+  ]
+};
+
+const landingDayMeta = {
+  day1: {
+    title: "Day 1 - Tai Po",
+    summary: "Village heritage, temple streets, railway stories, and a greener day out linked by public transport."
+  },
+  day2: {
+    title: "Day 2 - Sha Tin",
+    summary: "Museum visits, riverside walking, temple heritage, and a compact route centered around Sha Tin."
+  }
+};
+
+const categoryLabels = {
+  all: "All",
+  hotel: "Hotels",
+  mtr: "MTR",
+  bus: "Bus stops",
+  restaurant: "Restaurants",
+  mall: "Malls",
+  garden: "Gardens",
+  museum: "Museums",
+  railway: "Railway",
+  tree: "Nature",
+  temple: "Temples",
+  exhibition: "Exhibitions"
+};
+
+const categoryLegendOrder = ["restaurant", "mtr", "bus", "exhibition", "tree", "temple", "museum", "hotel", "railway", "mall", "garden"];
+const categoryLegendNames = {
+  restaurant: "Canteen | Restaurant",
+  mtr: "MTR",
+  bus: "Bus stop",
+  exhibition: "Exhibition",
+  tree: "Lam Tsuen Wishing Tree",
+  temple: "Temple",
+  museum: "Museum",
+  hotel: "Hotel",
+  railway: "Railway",
+  mall: "Shopping",
+  garden: "Garden"
+};
+
+function getCategoryIconUrl(category) {
+  return getIcon(category)?.options?.iconUrl || "";
+}
+
+function buildLegendStatic(container, dayObj) {
+  if (!container || !dayObj) return;
+  const cats = getDayCategories(dayObj);
+  container.innerHTML = "";
+  categoryLegendOrder.filter((cat) => cats.includes(cat)).forEach((cat) => {
+    const row = document.createElement("div");
+    row.className = "legendStaticItem";
+    row.innerHTML = `<img src="${getCategoryIconUrl(cat)}" alt="" /><span>${categoryLegendNames[cat] || categoryLabels[cat] || cat}</span>`;
+    container.appendChild(row);
+  });
+}
+
+function getDayCategories(dayObj) {
+  return [...new Set(dayObj.stops.map((s) => s.category))];
+}
+
+function syncActiveCategories(dayObj) {
+  const cats = getDayCategories(dayObj);
+  if (!activeCategories.size || !cats.some((c) => activeCategories.has(c))) {
+    activeCategories = new Set(cats);
+  } else {
+    activeCategories = new Set([...activeCategories].filter((c) => cats.includes(c)));
+  }
+}
+
+function buildLegend(container, dayObj) {
+  if (!container || !dayObj) return;
+  syncActiveCategories(dayObj);
+  const cats = getDayCategories(dayObj);
+  container.innerHTML = "";
+
+  cats.forEach((cat) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `legendFilterRow ${activeCategories.has(cat) ? "active" : "inactive"}`;
+    btn.innerHTML = `
+      <img src="${getCategoryIconUrl(cat)}" alt="" />
+      <span>${categoryLegendNames[cat] || categoryLabels[cat] || cat}</span>
+      <span class="filterStatus">${activeCategories.has(cat) ? "Shown" : "Hidden"}</span>
+    `;
+    btn.addEventListener("click", () => {
+      if (activeCategories.has(cat)) activeCategories.delete(cat);
+      else activeCategories.add(cat);
+      if (activeCategories.size === 0) activeCategories = new Set(cats);
+      updateLegendAndMap();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function updateLegendAndMap() {
+  if (!currentDay) return;
+  buildLegendStatic(document.getElementById("legendStaticList"), currentDay);
+  buildLegendStatic(document.getElementById("mobileLegendStaticList"), currentDay);
+  buildLegend(document.getElementById("legendFilters"), currentDay);
+  buildLegend(document.getElementById("mobileLegendFilters"), currentDay);
+  showDay(currentDay);
+}
+
+const footprintByCategory = {
+  hotel: "Very low additional footprint here. This is mainly a stay/start node rather than a transport-heavy attraction.",
+  mtr: "Low estimated transport footprint. Rail is one of the lighter-impact ways to move through the route.",
+  bus: "Moderate but still shared-impact transport. Better than point-to-point private rides for this route.",
+  restaurant: "Mostly depends on dining choices. Lower-waste and plant-forward meals make this stop lighter-impact.",
+  mall: "Low-to-moderate footprint if combined with other stops on foot rather than treated as a separate trip.",
+  garden: "Low route footprint. Walking and public open space keep this stop relatively light-impact.",
+  museum: "Low route footprint when visited inside a walkable day cluster.",
+  railway: "Low route footprint. This stop works best as a short walk between nearby attractions.",
+  tree: "Low route footprint with a strong sustainability angle through nature-based experience.",
+  temple: "Low route footprint when combined with walking or shared transport.",
+  exhibition: "Low-to-moderate route footprint depending on how much extra transport is required."
+};
+
+function getDayKey(dayObj) {
+  return dayObj === day2 ? "day2" : "day1";
+}
+
+function getFootprintText(stop) {
+  return stop.footprint || footprintByCategory[stop.category] || "Low-to-moderate footprint estimate for this stop within the suggested route.";
+}
+
+function getPreviewPhoto(stop) {
+  if (stop.photos?.length) return stop.photos[0];
+  return "data:image/svg+xml;utf8," + encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420">
+      <rect width="800" height="420" fill="#eef2f5"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#7a8a9a" font-size="34" font-family="Arial, sans-serif">
+        No preview photo yet
+      </text>
+    </svg>
+  `);
+}
+
+function saveChecklistState(dayKey, index, checked) {
+  localStorage.setItem(`tour-check-${dayKey}-${index}`, checked ? "1" : "0");
+}
+
+function loadChecklistState(dayKey, index) {
+  return localStorage.getItem(`tour-check-${dayKey}-${index}`) === "1";
+}
+
+function getTodoStorageKey(dayObj) {
+  return `tour-stop-todo-${getDayKey(dayObj)}`;
+}
+
+function loadTodoIds(dayObj) {
+  try {
+    const raw = localStorage.getItem(getTodoStorageKey(dayObj));
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveTodoIds(dayObj, ids) {
+  localStorage.setItem(getTodoStorageKey(dayObj), JSON.stringify(ids));
+}
+
+function isStopInTodo(dayObj, stop) {
+  return loadTodoIds(dayObj).includes(stop.id);
+}
+
+function toggleStopTodo(dayObj, stop) {
+  const ids = loadTodoIds(dayObj);
+  const nextIds = ids.includes(stop.id) ? ids.filter((id) => id !== stop.id) : [...ids, stop.id];
+  saveTodoIds(dayObj, nextIds);
+  updateChecklistPanels(dayObj);
+  updateStopTodoButton(dayObj, stop);
+}
+
+function updateStopTodoButton(dayObj, stop) {
+  const btn = document.getElementById("stopTodoBtn");
+  if (!btn || !dayObj || !stop) return;
+  const added = isStopInTodo(dayObj, stop);
+  btn.classList.toggle("is-added", added);
+  btn.textContent = added ? "✓ Added to to-do list" : "✓ Add to to-do list";
+  btn.setAttribute("aria-pressed", added ? "true" : "false");
+}
+
+function getPlanDotClass(type) {
+  if (type === "transfer") return "planDot transfer";
+  if (type === "optional") return "planDot optional";
+  return "planDot";
+}
+
+function syncLandingSelection(dayKey, expandCard = false) {
+  selectedLandingDay = dayKey === "day2" ? "day2" : "day1";
+  const meta = landingDayMeta[selectedLandingDay];
+
+  const landingCta = document.getElementById("landingGoToMapBtn");
+  const selectedDayEl = document.getElementById("landingSelectedDay");
+  const selectedSummaryEl = document.getElementById("landingSelectedSummary");
+
+  if (landingCta) landingCta.textContent = `Open ${meta.title} on map`;
+  if (selectedDayEl) selectedDayEl.textContent = meta.title;
+  if (selectedSummaryEl) selectedSummaryEl.textContent = meta.summary;
+
+  document.querySelectorAll("[data-select-day]").forEach((btn) => {
+    btn.classList.toggle("active", btn.getAttribute("data-select-day") === selectedLandingDay);
+  });
+
+  if (!expandCard) return;
+
+  document.querySelectorAll(".dayCard").forEach((otherCard) => {
+    otherCard.classList.remove("is-open");
+    otherCard.querySelector(".dayCardHeader")?.setAttribute("aria-expanded", "false");
+  });
+  document.querySelectorAll(".dayCardBody").forEach((otherBody) => otherBody.classList.add("hidden"));
+
+  const body = document.getElementById(`dayCardBody-${selectedLandingDay}`);
+  const card = document.getElementById(`dayCard-${selectedLandingDay}`);
+  const header = card?.querySelector(".dayCardHeader");
+
+  card?.classList.add("is-open");
+  header?.setAttribute("aria-expanded", "true");
+  body?.classList.remove("hidden");
+}
+
+function initLandingPhotoRail() {
+  const viewport = document.querySelector(".landingPhotoRailViewport");
+  const rail = document.querySelector(".landingPhotoRail");
+  if (!viewport || !rail) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let paused = false;
+  let frameId = null;
+  let lastTimestamp = 0;
+  let offset = 0;
+
+  const visibleItems = [...rail.children].filter((item) => item.getAttribute("aria-hidden") !== "true");
+  const getLoopWidth = () => {
+    if (!visibleItems.length) return rail.scrollWidth / 2;
+    const gap = parseFloat(window.getComputedStyle(rail).columnGap || window.getComputedStyle(rail).gap || "14");
+    return visibleItems.reduce((sum, item) => sum + item.getBoundingClientRect().width, 0) + gap * Math.max(visibleItems.length - 1, 0);
+  };
+
+  const applyTransform = () => {
+    rail.style.transform = `translate3d(${-offset}px, 0, 0)`;
+  };
+
+  const tick = (timestamp) => {
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    const delta = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+
+    if (!paused) {
+      const loopWidth = getLoopWidth();
+      offset += delta * 0.035;
+      if (offset >= loopWidth) {
+        offset -= loopWidth;
+      }
+      applyTransform();
+    }
+
+    frameId = window.requestAnimationFrame(tick);
+  };
+
+  const pause = () => { paused = true; };
+  const resume = () => { paused = false; };
+
+  viewport.addEventListener("mouseenter", pause);
+  viewport.addEventListener("mouseleave", resume);
+  viewport.addEventListener("focusin", pause);
+  viewport.addEventListener("focusout", resume);
+  viewport.addEventListener("touchstart", pause, { passive: true });
+  viewport.addEventListener("touchend", resume, { passive: true });
+  window.addEventListener("resize", () => {
+    const loopWidth = getLoopWidth();
+    if (offset >= loopWidth) offset = 0;
+    applyTransform();
+  });
+
+  if (frameId) window.cancelAnimationFrame(frameId);
+  applyTransform();
+  frameId = window.requestAnimationFrame(tick);
+}
+
+function renderLandingPlans() {
+  Object.entries(routePlans).forEach(([dayKey, items]) => {
+    const container = document.getElementById(`landingPlan-${dayKey}`);
+    if (!container) return;
+    container.innerHTML = "";
+    items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "landingPlanItem";
+      row.innerHTML = `
+        <div class="${getPlanDotClass(item.type)}"></div>
+        <div class="planText">
+          <div class="planLabel">${item.label}</div>
+          <div class="planMeta">${item.meta || ""}</div>
+        </div>
+      `;
+      container.appendChild(row);
+    });
+  });
+}
+
+function renderChecklist(container, dayObj) {
+  if (!container || !dayObj) return;
+  const selectedIds = loadTodoIds(dayObj);
+  const items = dayObj.stops.filter((stop) => selectedIds.includes(stop.id));
+  container.innerHTML = "";
+
+  if (!items.length) {
+    container.innerHTML = `<div class="checkEmpty">Your to-do list is empty. Open a stop and add it with the check button.</div>`;
+    return;
+  }
+
+  items.forEach((stop) => {
+    const row = document.createElement("label");
+    row.className = "checkItem";
+    row.innerHTML = `
+      <input type="checkbox" checked />
+      <div class="checkText">
+        <div class="checkTitle">${stop.title}</div>
+        <div class="checkMeta">${stop.subtitle || dayObj.name}</div>
+      </div>
+    `;
+    const checkbox = row.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      toggleStopTodo(dayObj, stop);
+      if (currentStop?.id === stop.id && currentDay === dayObj) updateStopTodoButton(dayObj, stop);
+    });
+    container.appendChild(row);
+  });
+}
+
+function updateChecklistPanels(dayObj) {
+  renderChecklist(document.getElementById("routeChecklist"), dayObj);
+  renderChecklist(document.getElementById("mobileChecklist"), dayObj);
+}
+
 function buildGallery(container, stop) {
   container.innerHTML = "";
   if (!stop.photos || stop.photos.length === 0) {
@@ -759,16 +1069,12 @@ function moveLightbox(step) {
 
 function bindLightbox() {
   const overlay = document.getElementById("galleryLightbox");
-  const closeBtn = document.getElementById("lightboxClose");
-  const prevBtn = document.getElementById("lightboxPrev");
-  const nextBtn = document.getElementById("lightboxNext");
+  if (!overlay) return;
   const stage = document.getElementById("lightboxStage");
 
-  if (!overlay) return;
-
-  closeBtn?.addEventListener("click", closeLightbox);
-  prevBtn?.addEventListener("click", () => moveLightbox(-1));
-  nextBtn?.addEventListener("click", () => moveLightbox(1));
+  document.getElementById("lightboxClose")?.addEventListener("click", closeLightbox);
+  document.getElementById("lightboxPrev")?.addEventListener("click", () => moveLightbox(-1));
+  document.getElementById("lightboxNext")?.addEventListener("click", () => moveLightbox(1));
 
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closeLightbox();
@@ -776,19 +1082,15 @@ function bindLightbox() {
 
   let startX = 0;
   let trackingTouch = false;
-
   stage?.addEventListener("touchstart", (e) => {
-    if (!e.touches || e.touches.length !== 1) return;
+    if (e.touches?.length !== 1) return;
     startX = e.touches[0].clientX;
     trackingTouch = true;
   }, { passive: true });
-
   stage?.addEventListener("touchend", (e) => {
-    if (!trackingTouch || !e.changedTouches || e.changedTouches.length !== 1) return;
+    if (!trackingTouch || e.changedTouches?.length !== 1) return;
     const deltaX = e.changedTouches[0].clientX - startX;
-    if (Math.abs(deltaX) > 45) {
-      moveLightbox(deltaX > 0 ? -1 : 1);
-    }
+    if (Math.abs(deltaX) > 45) moveLightbox(deltaX > 0 ? -1 : 1);
     trackingTouch = false;
   }, { passive: true });
 
@@ -801,27 +1103,20 @@ function bindLightbox() {
 }
 
 function renderStopContent(dayObj, stop) {
-  // desktop
+  currentStop = stop;
   document.getElementById("badge").textContent = dayObj.name;
   document.getElementById("badge").style.background = dayObj.color;
   document.getElementById("stopTitle").textContent = stop.title;
   document.getElementById("stopSubtitle").textContent = stop.subtitle || "";
   document.getElementById("stopStory").textContent = stop.story || "";
+  document.getElementById("stopFootprint").textContent = getFootprintText(stop);
+  updateStopTodoButton(dayObj, stop);
 
-  const stepsUl = document.getElementById("stopSteps");
-  stepsUl.innerHTML = "";
-  (stop.steps || []).forEach((s) => {
-    const li = document.createElement("li");
-    li.textContent = s;
-    stepsUl.appendChild(li);
-  });
-
-  const gallery = document.getElementById("gallery");
-  buildGallery(gallery, stop);
+  buildGallery(document.getElementById("gallery"), stop);
 
   const audioBox = document.getElementById("audioBox");
   audioBox.innerHTML = "";
-  if (!stop.audio || stop.audio.length === 0) {
+  if (!stop.audio?.length) {
     audioBox.innerHTML = `<p class="muted">No audio yet.</p>`;
   } else {
     stop.audio.forEach((a) => {
@@ -843,71 +1138,82 @@ function renderStopContent(dayObj, stop) {
     li.textContent = t;
     tipsUl.appendChild(li);
   });
+}
 
-  // mobile
-  document.getElementById("mobileBadge").textContent = dayObj.name;
-  document.getElementById("mobileBadge").style.background = dayObj.color;
-  document.getElementById("mobileTitle").textContent = stop.title;
-  document.getElementById("mobileSubtitle").textContent = stop.subtitle || "";
-  document.getElementById("mobileStory").textContent = stop.story || "";
-
-  const mobileSteps = document.getElementById("mobileSteps");
-  mobileSteps.innerHTML = "";
-  (stop.steps || []).forEach((s) => {
-    const li = document.createElement("li");
-    li.textContent = s;
-    mobileSteps.appendChild(li);
-  });
-
-  const mobileGallery = document.getElementById("mobileGallery");
-  buildGallery(mobileGallery, stop);
-
-  const mobileAudio = document.getElementById("mobileAudio");
-  mobileAudio.innerHTML = "";
-  if (!stop.audio || stop.audio.length === 0) {
-    mobileAudio.innerHTML = `<p class="muted">No audio yet.</p>`;
-  } else {
-    stop.audio.forEach((a) => {
-      const wrap = document.createElement("div");
-      wrap.style.marginBottom = "10px";
-      wrap.innerHTML = `<div class="muted">${a.label || "Audio"}</div>`;
-      const audio = document.createElement("audio");
-      audio.controls = true;
-      audio.src = a.src;
-      wrap.appendChild(audio);
-      mobileAudio.appendChild(wrap);
-    });
+function renderDefaultDayInfo(dayObj) {
+  const titleEl = document.getElementById("stopTitle");
+  if (!titleEl) return;
+  document.getElementById("badge").textContent = dayObj.name;
+  document.getElementById("badge").style.background = dayObj.color;
+  titleEl.textContent = dayObj.name;
+  document.getElementById("stopSubtitle").textContent = "Select a marker to open a full stop page.";
+  document.getElementById("stopStory").textContent = "Each place opens as its own full page, where you can review photos, story notes, and decide whether to save it for your trip.";
+  document.getElementById("stopFootprint").textContent = "Use the map tools for filters, then add the stops you actually want into your own to-do list.";
+  document.getElementById("gallery").innerHTML = `<p class="muted">Open a stop to browse photos.</p>`;
+  document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to hear local voices.</p>`;
+  document.getElementById("tips").innerHTML = `<li>Build your own to-do list by adding stops from their individual pages.</li>`;
+  const todoBtn = document.getElementById("stopTodoBtn");
+  if (todoBtn) {
+    todoBtn.classList.remove("is-added");
+    todoBtn.textContent = "✓ Add to to-do list";
+    todoBtn.setAttribute("aria-pressed", "false");
   }
+}
 
-  const mobileTips = document.getElementById("mobileTips");
-  mobileTips.innerHTML = "";
-  (stop.tips || []).forEach((t) => {
-    const li = document.createElement("li");
-    li.textContent = t;
-    mobileTips.appendChild(li);
-  });
+function tooltipHtml(stop) {
+  return `
+    <div class="tooltipCard">
+      <img class="tooltipImg" src="${getPreviewPhoto(stop)}" alt="${stop.title} preview" />
+      <div class="tooltipBody">
+        <div class="tooltipTitle">${stop.title}</div>
+        <div class="tooltipFootprint">${getFootprintText(stop)}</div>
+      </div>
+    </div>
+  `;
 }
 
 function openStop(dayObj, stop) {
   renderStopContent(dayObj, stop);
-
-  if (isMobileView()) {
-    openMobileSheet("half", true);
-    mobileSheetBodyEl().scrollTop = 0;
-    map.flyTo(stop.latlng, Math.max(map.getZoom(), 15), { duration: 0.45 });
-  } else {
-    expandDesktopPanel();
-    map.flyTo(stop.latlng, Math.max(map.getZoom(), 15), { duration: 0.45 });
-  }
+  openStopPage();
+  map.flyTo(stop.latlng, Math.max(map.getZoom(), 15), { duration: 0.45 });
 }
 
-/* ---------- MAP ---------- */
-function showDay(dayObj) {
+function switchDay(dayObj) {
   currentDay = dayObj;
-  markersLayer.clearLayers();
+  currentStop = null;
+  syncActiveCategories(dayObj);
+  document.getElementById("day1Btn").classList.toggle("active", dayObj === day1);
+  document.getElementById("day2Btn").classList.toggle("active", dayObj === day2);
+  updateChecklistPanels(dayObj);
+  renderDefaultDayInfo(dayObj);
+  updateLegendAndMap();
+  closeStopPage();
+}
 
+function showLanding() {
+  mapViewEl().classList.add("hidden");
+  landingViewEl().classList.remove("hidden");
+  closeStopPage();
+  closeLegendDrawer();
+  closeTodoDrawer();
+  closeMobileUtilitySheet();
+}
+
+function openMapForDay(dayKey) {
+  landingViewEl().classList.add("hidden");
+  mapViewEl().classList.remove("hidden");
+  setTimeout(() => {
+    refreshMapSize();
+    switchDay(dayKey === "day2" ? day2 : day1);
+  }, 40);
+}
+
+function showDay(dayObj) {
+  markersLayer.clearLayers();
   const bounds = [];
+
   dayObj.stops.forEach((stop) => {
+    if (!activeCategories.has(stop.category)) return;
     bounds.push(stop.latlng);
     const marker = L.marker(stop.latlng, {
       icon: getIcon(stop.category),
@@ -916,71 +1222,166 @@ function showDay(dayObj) {
     }).addTo(markersLayer);
 
     marker.on("click", () => openStop(dayObj, stop));
-    marker.bindTooltip(stop.title, { direction: "top", opacity: 0.95 });
+
+    if (!isMobileView()) {
+      marker.bindTooltip(tooltipHtml(stop), {
+        direction: "top",
+        opacity: 1,
+        className: "customTooltip",
+        offset: [0, -14]
+      });
+    }
   });
 
   if (bounds.length) {
-    const pad = isMobileView() ? [24, 120] : [40, 40];
+    const pad = isMobileView() ? [28, 28] : [48, 48];
     map.fitBounds(bounds, { padding: pad, maxZoom: dayObj.zoom || 15 });
   } else {
     map.setView(dayObj.center, dayObj.zoom);
   }
 }
 
-/* ---------- INIT ---------- */
-function init() {
-  map = L.map("map", { zoomControl: true });
+function bindLanding() {
+  document.querySelectorAll("[data-day-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const dayKey = btn.getAttribute("data-day-toggle");
+      const body = document.getElementById(`dayCardBody-${dayKey}`);
+      const willOpen = body.classList.contains("hidden");
+      syncLandingSelection(dayKey, willOpen);
+      if (!willOpen) {
+        btn.setAttribute("aria-expanded", "false");
+        btn.closest(".dayCard")?.classList.remove("is-open");
+        body.classList.add("hidden");
+      }
+    });
+  });
 
+  document.querySelectorAll("[data-select-day]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      syncLandingSelection(btn.getAttribute("data-select-day"), true);
+    });
+  });
+
+  document.querySelectorAll("[data-open-map]").forEach((btn) => {
+    btn.addEventListener("click", () => openMapForDay(btn.getAttribute("data-open-map")));
+  });
+
+  document.getElementById("landingGoToMapBtn")?.addEventListener("click", () => openMapForDay(selectedLandingDay));
+  document.getElementById("landingPreviewBtn")?.addEventListener("click", () => {
+    syncLandingSelection(selectedLandingDay, true);
+    document.getElementById("itinerarySection")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function openLegendDrawer() {
+  document.getElementById("legendDrawer")?.classList.remove("hidden");
+}
+function closeLegendDrawer() {
+  document.getElementById("legendDrawer")?.classList.add("hidden");
+}
+function openTodoDrawer() {
+  document.getElementById("todoDrawer")?.classList.remove("hidden");
+}
+function closeTodoDrawer() {
+  document.getElementById("todoDrawer")?.classList.add("hidden");
+}
+function openStopPage() {
+  const page = document.getElementById("stopPage");
+  if (!page) return;
+  page.classList.remove("is-closing");
+  page.classList.remove("hidden");
+  requestAnimationFrame(() => page.classList.add("is-open"));
+  page.setAttribute("aria-hidden", "false");
+  document.body.classList.add("stop-page-open");
+}
+function closeStopPage() {
+  const page = document.getElementById("stopPage");
+  if (!page) return;
+  if (page.classList.contains("hidden")) return;
+  page.classList.remove("is-open");
+  page.classList.add("is-closing");
+  page.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("stop-page-open");
+  setTimeout(() => {
+    page.classList.add("hidden");
+    page.classList.remove("is-closing");
+  }, 320);
+}
+function setUtilityMode(mode) {
+  document.getElementById("utilityTabFilters")?.classList.toggle("active", mode === "filters");
+  document.getElementById("utilityTabTodo")?.classList.toggle("active", mode === "todo");
+  document.getElementById("utilityFiltersPane")?.classList.toggle("hidden", mode !== "filters");
+  document.getElementById("utilityTodoPane")?.classList.toggle("hidden", mode !== "todo");
+  const eyebrow = document.getElementById("utilitySheetEyebrow");
+  const title = document.getElementById("utilitySheetTitle");
+  if (eyebrow) eyebrow.textContent = mode === "filters" ? "Map legend" : "Optional plan";
+  if (title) title.textContent = mode === "filters" ? "Show or hide categories" : "Route to-do list";
+}
+function openMobileUtilitySheet(mode = "filters") {
+  const sheet = document.getElementById("mobileUtilitySheet");
+  if (!sheet) return;
+  setUtilityMode(mode);
+  sheet.classList.remove("hidden");
+  setMobileBackdrop(true);
+}
+function closeMobileUtilitySheet() {
+  document.getElementById("mobileUtilitySheet")?.classList.add("hidden");
+  setMobileBackdrop(false);
+}
+
+function bindMapUi() {
+  document.getElementById("day1Btn")?.addEventListener("click", () => switchDay(day1));
+  document.getElementById("day2Btn")?.addEventListener("click", () => switchDay(day2));
+  document.getElementById("backToLandingBtn")?.addEventListener("click", showLanding);
+  document.getElementById("menuToggleBtn")?.addEventListener("click", () => {
+    if (document.getElementById("legendDrawer")?.classList.contains("hidden")) openLegendDrawer();
+    else closeLegendDrawer();
+  });
+  document.getElementById("todoToggleBtn")?.addEventListener("click", () => {
+    if (document.getElementById("todoDrawer")?.classList.contains("hidden")) openTodoDrawer();
+    else closeTodoDrawer();
+  });
+  document.getElementById("legendCloseBtn")?.addEventListener("click", closeLegendDrawer);
+  document.getElementById("todoCloseBtn")?.addEventListener("click", closeTodoDrawer);
+  document.getElementById("mobileFilterFab")?.addEventListener("click", () => openMobileUtilitySheet("filters"));
+  document.getElementById("mobileTodoFab")?.addEventListener("click", () => openMobileUtilitySheet("todo"));
+  document.getElementById("mobileUtilityCloseBtn")?.addEventListener("click", closeMobileUtilitySheet);
+  document.getElementById("utilityTabFilters")?.addEventListener("click", () => setUtilityMode("filters"));
+  document.getElementById("utilityTabTodo")?.addEventListener("click", () => setUtilityMode("todo"));
+  mobileBackdropEl()?.addEventListener("click", closeMobileUtilitySheet);
+  document.getElementById("stopPageBackBtn")?.addEventListener("click", closeStopPage);
+  document.getElementById("stopPageIntroBtn")?.addEventListener("click", showLanding);
+  document.getElementById("stopTodoBtn")?.addEventListener("click", () => {
+    if (!currentDay || !currentStop) return;
+    toggleStopTodo(currentDay, currentStop);
+  });
+}
+
+function initMap() {
+  map = L.map("map", { zoomControl: false });
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
     maxZoom: 20,
     attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
   }).addTo(map);
-
   markersLayer.addTo(map);
+}
 
-  const day1Btn = document.getElementById("day1Btn");
-  const day2Btn = document.getElementById("day2Btn");
-
-  day1Btn.addEventListener("click", () => {
-    day1Btn.classList.add("active");
-    day2Btn.classList.remove("active");
-    showDay(day1);
-    isMobileView() ? closeMobileSheet() : (collapseDesktopPanel(), hideDesktopToggleUntilFirstOpen());
-  });
-
-  day2Btn.addEventListener("click", () => {
-    day2Btn.classList.add("active");
-    day1Btn.classList.remove("active");
-    showDay(day2);
-    isMobileView() ? closeMobileSheet() : (collapseDesktopPanel(), hideDesktopToggleUntilFirstOpen());
-  });
-
-  document.getElementById("desktopToggleBtn").addEventListener("click", () => {
-    if (panelEl().classList.contains("panel-collapsed")) expandDesktopPanel();
-    else collapseDesktopPanel();
-  });
-
-  document.getElementById("mobileCloseBtn").addEventListener("click", closeMobileSheet);
-
-  bindMobileSheetGestures();
+function init() {
+  initMap();
+  renderLandingPlans();
+  bindLanding();
+  syncLandingSelection("day1", true);
+  initLandingPhotoRail();
+  bindMapUi();
   bindLightbox();
+
   window.addEventListener("resize", () => {
     refreshMapSize();
     if (!map || !currentDay) return;
-    if (isMobileView() && mobileState !== 'hidden') {
-      setMobilePosition(getMobileOffsets()[mobileState], false);
-    }
+    showDay(currentDay);
   });
 
-  showDay(day1);
-
-  if (isMobileView()) {
-    mobileSheetEl().classList.add("hidden");
-    mobileSheetEl().style.transform = `translateY(${window.innerHeight + 24}px)`;
-  } else {
-    collapseDesktopPanel();
-    hideDesktopToggleUntilFirstOpen();
-  }
+  showLanding();
 }
 
 window.addEventListener("DOMContentLoaded", init);

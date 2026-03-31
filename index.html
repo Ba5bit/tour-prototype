@@ -3,114 +3,326 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HK Low-Carbon Digital Tour</title>
-
+  <title>Urban Eco Route | Sha Tin & Tai Po</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <link rel="stylesheet" href="./style.css" />
   <script defer src="./app.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <div class="title">HK Low-Carbon Digital Tour</div>
-      <div class="subtitle">Clean city guide for a relaxed low-carbon visit</div>
-    </div>
+  <section id="landingView" class="landingView">
+    <div class="landingShell">
+      <header class="siteHeader cardLike">
+        <div class="brandLockup">
+          <span class="brandMark">HK</span>
+          <div class="brandText">
+            <strong>Urban Eco Route</strong>
+            <span>Discover Sha Tin and Tai Po at a slower pace</span>
+          </div>
+        </div>
+        <nav class="siteNavLinks" aria-label="Landing navigation">
+          <a href="#landingHighlights">Highlights</a>
+          <a href="#websiteToolsSection">Tools</a>
+          <a href="#itinerarySection">Itinerary</a>
+        </nav>
+        <button id="landingGoToMapBtn" class="primaryBtn" type="button">Open Day 1 on map</button>
+      </header>
 
-    <div class="tabs">
-      <button id="day1Btn" class="tab active">Day 1 (Tai Po)</button>
-      <button id="day2Btn" class="tab">Day 2 (Sha Tin)</button>
-    </div>
-  </header>
-
-  <main class="layout">
-    <section id="map"></section>
-    <div id="mobileBackdrop" class="mobileBackdrop"></div>
-
-    <!-- Desktop toggle -->
-    <button id="desktopToggleBtn" class="desktopToggleBtn is-hidden" aria-label="Toggle details">←</button>
-
-    <!-- Desktop side panel -->
-    <aside id="infoPanel" class="panel panel-collapsed">
-      <div class="panelInner">
-        <div class="stopHead">
-          <div class="headText">
-            <div id="badge" class="badge">Day 1 (Tai Po)</div>
-            <h2 id="stopTitle">Title</h2>
-            <p id="stopSubtitle" class="muted">Subtitle</p>
+      <section class="heroSection cardLike">
+        <div class="heroCopy">
+          <span class="eyebrow">Curated Hong Kong journeys</span>
+          <h1>Explore Sha Tin and Tai Po with two curated day routes.</h1>
+          <p class="landingLead">Discover temples, museums, market streets, riverside walks, and easy public-transport connections across both districts.</p>
+          <div class="heroActions">
+            <button id="landingPreviewBtn" class="ghostBtn heroGhostBtn" type="button">Preview itinerary</button>
+            <div class="heroDaySwitch">
+              <button class="navDayPill active" type="button" data-select-day="day1">Day 1</button>
+              <button class="navDayPill" type="button" data-select-day="day2">Day 2</button>
+            </div>
+          </div>
+          <div class="heroStats">
+            <article class="heroStatCard">
+              <strong>2</strong>
+              <span>Curated day routes</span>
+            </article>
+            <article class="heroStatCard">
+              <strong>20+</strong>
+              <span>Stops across the trip</span>
+            </article>
+            <article class="heroStatCard">
+              <strong>Public Transit</strong>
+              <span>Built around rail, bus, and walking</span>
+            </article>
+            <article class="heroStatCard">
+              <strong>Interactive</strong>
+              <span>Map, legend, checklist, and stop pages</span>
+            </article>
           </div>
         </div>
 
-        <section class="card">
-          <h3>1-minute story</h3>
-          <p id="stopStory"></p>
-        </section>
-
-        <section class="card">
-          <h3>Transportation</h3>
-          <ul id="stopSteps" class="list"></ul>
-        </section>
-
-        <section class="card">
-          <h3>Photos</h3>
-          <div id="gallery" class="gallery"></div>
-        </section>
-
-        <section class="card">
-          <h3>Local voices</h3>
-          <div id="audioBox"></div>
-        </section>
-
-        <section class="card">
-          <h3>Sustainability tips</h3>
-          <ul id="tips" class="list"></ul>
-        </section>
-      </div>
-    </aside>
-
-    <!-- Mobile bottom sheet -->
-    <section id="mobileSheet" class="mobileSheet hidden">
-      <div id="sheetHandle" class="sheetHandle"></div>
-
-      <div id="mobileSheetHeader" class="mobileSheetHeader">
-        <div class="mobileSheetTitleWrap">
-          <div id="mobileBadge" class="badge">Day 1 (Tai Po)</div>
-          <h2 id="mobileTitle">Title</h2>
-          <p id="mobileSubtitle" class="muted">Subtitle</p>
+        <div class="heroVisual">
+          <article class="heroImageCard">
+            <img src="./assets/photos/hotel_1.jpg" alt="Royal Park Hotel and Sha Tin surroundings" />
+            <div class="heroImageOverlay">
+              <span class="heroImageTag">Trip starting point</span>
+              <strong>Royal Park Hotel and the Sha Tin base</strong>
+            </div>
+          </article>
+          <article class="heroRouteCard">
+            <div class="sectionKicker">Featured journey</div>
+            <h2 id="landingSelectedDay">Day 1 - Tai Po</h2>
+            <p id="landingSelectedSummary">Village heritage, temple streets, and railway stories linked by public transport.</p>
+          </article>
         </div>
-        <button id="mobileCloseBtn" class="mobileCloseBtn" aria-label="Close">✕</button>
+      </section>
+
+      <section id="landingHighlights" class="highlightsSection">
+        <article class="featureListCard cardLike">
+          <div class="sectionKicker">What to expect</div>
+          <h2>Plan the day in minutes.</h2>
+          <ul class="featureBullets">
+            <li>Follow two curated day routes through Sha Tin and Tai Po.</li>
+            <li>Preview key stops, stories, and travel tips.</li>
+            <li>Browse places by category, from heritage sites to dining stops.</li>
+            <li>Adjust the journey to your own pace.</li>
+          </ul>
+        </article>
+
+        <article class="imageScrollerCard cardLike">
+          <div class="sectionHead">
+            <div>
+              <div class="sectionKicker">Along the route</div>
+              <h2>Places along the journey</h2>
+            </div>
+          </div>
+          <div class="landingPhotoRailViewport">
+            <div class="landingPhotoRail">
+              <article class="landingPhotoTile">
+                <img src="./assets/photos/tree_5.jpg" alt="Lam Tsuen Wishing Tree" />
+                <div><strong>Lam Tsuen</strong><span>Heritage and ritual landscape</span></div>
+              </article>
+              <article class="landingPhotoTile">
+                <img src="./assets/photos/manmo_2.jpg" alt="Fu Shin Street and Man Mo Temple" />
+                <div><strong>Fu Shin Street</strong><span>Temple inside a market district</span></div>
+              </article>
+              <article class="landingPhotoTile">
+                <img src="./assets/photos/railway_2.jpg" alt="Hong Kong Railway Museum" />
+                <div><strong>Railway Museum</strong><span>Transport history in old Tai Po</span></div>
+              </article>
+              <article class="landingPhotoTile">
+                <img src="./assets/photos/chekung_3.jpg" alt="Che Kung Temple" />
+                <div><strong>Che Kung Temple</strong><span>Major Sha Tin heritage stop</span></div>
+              </article>
+              <article class="landingPhotoTile" aria-hidden="true">
+                <img src="./assets/photos/tree_5.jpg" alt="" />
+                <div><strong>Lam Tsuen</strong><span>Heritage and ritual landscape</span></div>
+              </article>
+              <article class="landingPhotoTile" aria-hidden="true">
+                <img src="./assets/photos/manmo_2.jpg" alt="" />
+                <div><strong>Fu Shin Street</strong><span>Temple inside a market district</span></div>
+              </article>
+              <article class="landingPhotoTile" aria-hidden="true">
+                <img src="./assets/photos/railway_2.jpg" alt="" />
+                <div><strong>Railway Museum</strong><span>Transport history in old Tai Po</span></div>
+              </article>
+              <article class="landingPhotoTile" aria-hidden="true">
+                <img src="./assets/photos/chekung_3.jpg" alt="" />
+                <div><strong>Che Kung Temple</strong><span>Major Sha Tin heritage stop</span></div>
+              </article>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="websiteToolsSection" class="websiteToolsSection">
+        <article class="explainCard cardLike">
+          <div class="sectionKicker">Choose your route</div>
+          <h3>Pick your day</h3>
+          <p>Day 1 explores Tai Po. Day 2 stays closer to Sha Tin.</p>
+        </article>
+        <article class="explainCard cardLike">
+          <div class="sectionKicker">Explore each stop</div>
+          <h3>See the highlights</h3>
+          <p>Open stops for photos, local context, and practical trip details.</p>
+        </article>
+        <article class="mapShowcaseCard cardLike">
+          <div class="mapShowcaseBackdrop"></div>
+          <div class="mapShowcaseContent">
+            <div class="sectionKicker">Travel companion</div>
+            <h2>Follow the route with confidence.</h2>
+            <p>Navigate between landmarks, green spaces, transport links, and food stops more easily.</p>
+            <div class="featureChips">
+              <span>Scenic route previews</span>
+              <span>Categories for different kinds of stops</span>
+              <span>Flexible trip planning</span>
+              <span>Destination stories and photos</span>
+              <span>Local voices and media</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="itinerarySection" class="itinerarySection">
+        <div class="sectionHead itineraryHead">
+          <div>
+            <div class="sectionKicker">Suggested itineraries</div>
+            <h2>Two easy ways to explore</h2>
+          </div>
+          <p>Open a day to preview the route before heading into the map.</p>
+        </div>
+
+        <div class="landingDays">
+          <article class="dayCard" id="dayCard-day1">
+            <button class="dayCardHeader" type="button" data-day-toggle="day1" aria-expanded="false">
+              <div>
+                <div class="dayCardKicker">Suggested itinerary</div>
+                <h2>Day 1 - Tai Po</h2>
+                <p>Wishing tree, temple stop, railway heritage, and market area exploration.</p>
+              </div>
+              <span class="dayCardChevron">+</span>
+            </button>
+            <div class="dayCardBody hidden" id="dayCardBody-day1">
+              <div class="landingPlan" id="landingPlan-day1"></div>
+              <button class="openMapBtn" type="button" data-open-map="day1">Open Day 1 on map</button>
+            </div>
+          </article>
+
+          <article class="dayCard" id="dayCard-day2">
+            <button class="dayCardHeader" type="button" data-day-toggle="day2" aria-expanded="false">
+              <div>
+                <div class="dayCardKicker">Suggested itinerary</div>
+                <h2>Day 2 - Sha Tin</h2>
+                <p>Heritage museum, temple visit, and optional free exploration around Sha Tin.</p>
+              </div>
+              <span class="dayCardChevron">+</span>
+            </button>
+            <div class="dayCardBody hidden" id="dayCardBody-day2">
+              <div class="landingPlan" id="landingPlan-day2"></div>
+              <button class="openMapBtn" type="button" data-open-map="day2">Open Day 2 on map</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </section>
+
+    <section id="mapView" class="mapView hidden">
+    <main class="layout mapOnlyLayout">
+      <section id="map"></section>
+      <div id="mobileBackdrop" class="mobileBackdrop"></div>
+
+      <button id="menuToggleBtn" class="fabBtn menuFab" aria-label="Open map filters">
+        <span>☰</span>
+      </button>
+      <button id="todoToggleBtn" class="fabBtn todoFab desktopOnly" aria-label="Open route to-do list">
+        ✓
+      </button>
+
+      <div class="floatingControls" role="group" aria-label="Map controls">
+        <button id="backToLandingBtn" class="pillBtn">← Intro</button>
+        <button id="day1Btn" class="pillBtn active">Day 1</button>
+        <button id="day2Btn" class="pillBtn">Day 2</button>
       </div>
 
-      <div id="mobileSheetBody" class="mobileSheetBody">
-        <section class="card">
-          <h3>1-minute story</h3>
-          <p id="mobileStory"></p>
-        </section>
+      <aside id="legendDrawer" class="overlayDrawer legendDrawer hidden desktopOnly">
+        <div class="drawerHead">
+          <div>
+            <div class="legendEyebrow">Map legend</div>
+            <h3>Show or hide categories</h3>
+          </div>
+          <button id="legendCloseBtn" class="ghostBtn small">Close</button>
+        </div>
+        <div class="legendStaticList" id="legendStaticList"></div>
+        <div class="drawerSectionTitle">Visible on map</div>
+        <div id="legendFilters" class="legendFilters legendFiltersList"></div>
+      </aside>
 
-        <section class="card">
-          <h3>How to get here</h3>
-          <ul id="mobileSteps" class="list"></ul>
-        </section>
+      <aside id="todoDrawer" class="overlayDrawer todoDrawer hidden desktopOnly">
+        <div class="drawerHead">
+          <div>
+            <div class="legendEyebrow">Optional plan</div>
+            <h3>Route to-do list</h3>
+          </div>
+          <button id="todoCloseBtn" class="ghostBtn small">Close</button>
+        </div>
+        <div id="routeChecklist" class="checkList"></div>
+      </aside>
 
-        <section class="card">
-          <h3>Photos</h3>
-          <div id="mobileGallery" class="gallery"></div>
-        </section>
+      <button id="mobileFilterFab" class="fabBtn utilityFab mobileOnly" aria-label="Open map filters">☰</button>
+      <button id="mobileTodoFab" class="fabBtn utilityFab secondary mobileOnly" aria-label="Open route to-do list">✓</button>
 
-        <section class="card">
-          <h3>Local voices</h3>
-          <div id="mobileAudio"></div>
-        </section>
+      <section id="mobileUtilitySheet" class="utilitySheet mobileOnly hidden">
+        <div id="utilitySheetHandle" class="sheetHandle"></div>
+        <div class="utilitySheetHeader">
+          <div>
+            <div id="utilitySheetEyebrow" class="legendEyebrow">Map legend</div>
+            <h3 id="utilitySheetTitle">Show or hide categories</h3>
+          </div>
+          <button id="mobileUtilityCloseBtn" class="mobileCloseBtn" aria-label="Close">✕</button>
+        </div>
+        <div class="utilityTabs">
+          <button id="utilityTabFilters" class="utilityTab active">Filters</button>
+          <button id="utilityTabTodo" class="utilityTab">To-do list</button>
+        </div>
+        <div id="utilityFiltersPane" class="utilityPane">
+          <div id="mobileLegendStaticList" class="legendStaticList compact"></div>
+          <div id="mobileLegendFilters" class="legendFilters legendFiltersList"></div>
+        </div>
+        <div id="utilityTodoPane" class="utilityPane hidden">
+          <div id="mobileChecklist" class="checkList"></div>
+        </div>
+      </section>
 
-        <section class="card">
-          <h3>Sustainability tips</h3>
-          <ul id="mobileTips" class="list"></ul>
-        </section>
-      </div>
-    </section>
-  </main>
+      <section id="stopPage" class="stopPage hidden" aria-hidden="true">
+        <div class="stopPageShell">
+          <div class="stopPageTopbar">
+            <button id="stopPageBackBtn" class="ghostBtn">← Back to map</button>
+            <button id="stopPageIntroBtn" class="ghostBtn">Intro</button>
+          </div>
+          <div class="stopPageGrid">
+            <div class="stopPageMain">
+              <div class="stopPageHero card">
+                <div id="badge" class="badge">Day 1 (Tai Po)</div>
+                <h1 id="stopTitle">Stop title</h1>
+                <p id="stopSubtitle" class="muted">Short subtitle</p>
+                <button id="stopTodoBtn" class="stopTodoBtn" type="button">✓ Add to to-do list</button>
+              </div>
 
+              <section class="card">
+                <h3>About this stop</h3>
+                <p id="stopStory"></p>
+              </section>
+
+              <section class="card">
+                <h3>Estimated carbon footprint</h3>
+                <p id="stopFootprint"></p>
+              </section>
+
+              <section class="card">
+                <h3>Photos</h3>
+                <div id="gallery" class="gallery"></div>
+              </section>
+            </div>
+
+            <aside class="stopPageSide">
+              <section class="card">
+                <h3>Local voices</h3>
+                <div id="audioBox"></div>
+              </section>
+
+              <section class="card">
+                <h3>Sustainability tips</h3>
+                <ul id="tips" class="list"></ul>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
 
   <div id="galleryLightbox" class="lightbox" aria-hidden="true">
     <div class="lightboxChrome">
@@ -127,6 +339,5 @@
     </div>
     <button id="lightboxNext" class="lightboxNav lightboxNext" aria-label="Next photo"><span>›</span></button>
   </div>
-
 </body>
 </html>
