@@ -17,7 +17,12 @@ let currentStop = null;
 let lightboxPhotos = [];
 let lightboxIndex = 0;
 let activeLightboxTitle = "";
+let panoramaItems = [];
+let panoramaIndex = 0;
+let activePanoramaTitle = "";
+let panoramaOffsetX = 0;
 let activeCategories = new Set();
+const activeCategoriesByDay = new Map();
 let legendCollapsed = false;
 let selectedLandingDay = "day1";
 let utilityMode = "filters";
@@ -345,78 +350,6 @@ const day1 = {
       ]
     },
     {
-      id: "d1-eatwell",
-      category: "restaurant",
-      title: "Eat Well Canteen",
-      subtitle: "Low-carbon lunch stop",
-      latlng: [22.446628160768036, 114.16952258561489],
-      story: "A sustainability-oriented lunch stop linked with Green Hub values, making it a strong fit for a route focused on responsible tourism.",
-      steps: ["Walk from Tai Po Market area to Eat Well Canteen / Green Hub."],
-      photos: [],
-      audio: [],
-      tips: [
-        "Plant-forward dining can reduce the environmental footprint of meals.",
-        "This stop aligns well with SDG 12 through more conscious food choices.",
-        "Supporting places with sustainability messaging also strengthens demand for responsible local business."
-      ]
-    },
-    {
-      id: "d1-wantau",
-      category: "bus",
-      title: "Wan Tau Street Square Bus Stop",
-      subtitle: "Board 23K toward Tat Wan Road",
-      latlng: [22.446602653369922, 114.16820040614526],
-      story: "Key transfer point for the heritage section of the route. From here, visitors should take minibus 23K to Tat Wan Road in order to reach the Wun Yiu Exhibition area.",
-      steps: [
-        "Walk to Wan Tau Street Square Bus Stop",
-        "Board: 23K",
-        "Alight: Tat Wan Road",
-        "Continue toward Wun Yiu Exhibition"
-      ],
-      photos: [],
-      audio: [],
-      tips: [
-        "Using shared public transport makes access to heritage sites more efficient.",
-        "This supports SDG 11 by improving access to local cultural assets without heavy private transport use."
-      ]
-    },
-    {
-      id: "d1-tatwan",
-      category: "bus",
-      title: "Tat Wan Road",
-      subtitle: "Alight here for Wun Yiu Exhibition",
-      latlng: [22.43843941644709, 114.16484914699033],
-      story: "This is the more accurate stop to use when approaching Wun Yiu Exhibition from Wan Tau Street Square by 23K.",
-      steps: [
-        "Minibus: 23K",
-        "Alight: Tat Wan Road",
-        "Walk to Wun Yiu Exhibition"
-      ],
-      photos: [],
-      audio: [],
-      tips: [
-        "Shared access routes help distribute visitors more sustainably than point-to-point private rides."
-      ]
-    },
-    {
-      id: "d1-wunyiu",
-      category: "exhibition",
-      title: "Wun Yiu Exhibition",
-      subtitle: "Pottery heritage stop",
-      latlng: [22.437043679572863, 114.16393925263544],
-      story: "A heritage site connected to Tai Po’s pottery history, highlighting local craft production and the cultural memory of the area.",
-      steps: [
-        "Get off at Tat Wan Road",
-        "Walk to Wun Yiu Exhibition"
-      ],
-      photos: [],
-      audio: [],
-      tips: [
-        "Heritage conservation directly supports SDG 11 by protecting local culture.",
-        "Visiting craft-based sites also encourages appreciation of slower, place-based production rather than disposable mass consumption."
-      ]
-    },
-    {
       id: "d1-manmo",
       category: "temple",
       title: "Fu Shin Street Market + Man Mo Temple",
@@ -424,7 +357,7 @@ const day1 = {
       latlng: [22.44926799019482, 114.16466662675286],
       story: "This stop combines daily market life with religious heritage. Man Mo Temple sits within the Fu Shin Street area, showing how culture in Tai Po is still embedded in everyday community space rather than isolated from it.",
       steps: [
-        "Return from Wun Yiu toward Tai Po town",
+        "Return from Lam Tsuen toward Tai Po town",
         "Walk to Fu Shin Street Market",
         "Explore market → enter Man Mo Temple area"
       ],
@@ -462,46 +395,47 @@ const day1 = {
       ]
     },
     {
-    id: "d1-laichihang",
-    category: "bus",
-    title: "Lai Chi Hang",
-    subtitle: "Bus stop for Billow Bar and return route",
-    latlng: [22.435675997605035, 114.18350299700893],
-    story: "Lai Chi Hang is the main bus stop for reaching Billow Bar. Visitors can take 28K to this stop and later use the same corridor to return toward Tai Po Market Station.",
-    steps: [
-      "Board: 28K",
-      "Alight: Lai Chi Hang",
-      "Walk to Billow Bar",
-      "Return from Lai Chi Hang toward Tai Po Market Station"
-    ],
-    photos: [],
-    audio: [],
-    tips: [
-      "Using public bus instead of taxi helps reduce transport emissions.",
-      "Shared transport supports more sustainable tourism by lowering the per-person environmental impact of travel."
-    ]
-  },
-  {
-    id: "d1-billow",
-    category: "restaurant",
-    title: "Billow Bar",
-    subtitle: "Dinner stop",
-    latlng: [22.43632462166475, 114.18829364010924],
-    story: "Dinner stop near the Tai Po Kau corridor, suitable for ending Day 1 in a more relaxed setting after the heritage and town stops.",
-    steps: [
-      "Board: 28K",
-      "Alight: Lai Chi Hang",
-      "Walk to Billow Bar",
-      "Return via Lai Chi Hang toward Tai Po Market Station"
-    ],
-    photos: [],
-    audio: [],
-    tips: [
-      "Billow Bar can be framed as a sustainable dining stop through more thoughtful food choices and lower-waste consumption.",
-      "Choosing plant-forward dishes, shared plates, and avoiding unnecessary food waste supports SDG 12 on responsible consumption.",
-      "More conscious dining habits also connect this stop to SDG 13 by helping reduce the overall environmental impact of meals."
-    ]
-  }
+      id: "d1-buddhas",
+      category: "temple",
+      title: "Ten Thousand Buddhas Monastery",
+      subtitle: "Sha Tin hillside monastery stop",
+      latlng: [22.387802743469916, 114.18486333069305],
+      story: "Ten Thousand Buddhas Monastery is a hillside temple complex above Sha Tin, known for its long stair approach, gold Buddha statues, and layered pagodas and halls. It works well as the last cultural stop of Day 1 after returning from Tai Po.",
+      steps: [
+        "Return to Sha Tin by MTR",
+        "Walk from Sha Tin Station toward the monastery entrance",
+        "Climb the hillside stairway",
+        "Explore the monastery terraces and temple halls"
+      ],
+      photos: [
+        "./assets/photos/buddhas_1.jpg",
+        "./assets/photos/buddhas_2.jpg",
+        "./assets/photos/buddhas_3.jpg",
+        "./assets/photos/buddhas_4.jpg",
+        "./assets/photos/buddhas_5.jpg",
+        "./assets/photos/buddhas_6.jpg",
+        "./assets/photos/buddhas_7.jpg",
+        "./assets/photos/buddhas_8.jpg",
+        "./assets/photos/buddhas_9.jpg",
+        "./assets/photos/buddhas_10.jpg",
+        "./assets/photos/buddhas_11.jpg",
+        "./assets/photos/buddhas_12.jpg",
+        "./assets/photos/buddhas_13.jpg",
+        "./assets/photos/buddhas_14.jpg",
+        "./assets/photos/buddhas_15.jpg"
+      ],
+      panoramas: [
+        { src: "./assets/photos/360/panorama_monastery_1.JPG", label: "Entrance stairway" },
+        { src: "./assets/photos/360/panorama_monastery_2.JPG", label: "Upper monastery terrace" },
+        { src: "./assets/photos/360/panorama_monastery_3.JPG", label: "Pagoda and temple view" }
+      ],
+      audio: [],
+      tips: [
+        "The climb is steep, so this stop is best kept for later in the day only if energy levels are still good.",
+        "Bring water and wear comfortable shoes because most of the visit involves stairs.",
+        "The monastery supports SDG 11 through protection of living religious heritage and historic temple space."
+      ]
+    }
   ]
 };
 
@@ -518,57 +452,10 @@ const day2 = {
       subtitle: "Trip starting point",
       latlng: [22.379924625747798, 114.18855144136442],
       story: "Start and end point for Day 2 in Sha Tin, allowing most attractions to be reached on foot with minimal transport.",
-      steps: ["Walk from hotel to nearby museum / station / mall cluster."],
+      steps: ["Walk from the hotel toward the museum and temple area in Sha Tin."],
       photos: [],
       audio: [],
       tips: ["Compact itineraries reduce travel fatigue and unnecessary transport use."]
-    },
-    {
-      id: "d2-pici",
-      category: "restaurant",
-      title: "Pici",
-      subtitle: "Recommended sustainable lunch spot in New Town Plaza",
-      latlng: [22.38138238691266, 114.18802848683397],
-      story: "A convenient lunch option inside New Town Plaza that works well within a walkable urban itinerary and can be framed around more conscious dining choices.",
-      steps: [
-        "Walk to New Town Plaza",
-        "Have lunch at Pici"
-      ],
-      photos: [],
-      audio: [],
-      tips: [
-        "Dining within an existing walkable cluster reduces additional travel.",
-        "Menu choices such as lower-meat or shared dishes can better align with SDG 12 and SDG 13."
-      ]
-    },
-    {
-      id: "d2-alchemist",
-      category: "restaurant",
-      title: "The Alchemist Cafe",
-      subtitle: "Hong Kong Heritage Museum cafe stop",
-      latlng: [22.37692578425088, 114.18540180114134],
-      story: "A museum-adjacent cafe stop that fits naturally into the cultural route without requiring extra transport or detours.",
-      steps: [
-        "Visit Hong Kong Heritage Museum",
-        "Take a break at The Alchemist Cafe"
-      ],
-      photos: [],
-      audio: [],
-      tips: [
-        "Combining culture and dining in one location keeps the route efficient and lower-impact."
-      ]
-    },
-    {
-      id: "d2-shatin-mtr",
-      category: "mtr",
-      title: "Sha Tin Station",
-      subtitle: "Main MTR anchor point",
-      latlng: [22.384057872413763, 114.18796060900773],
-      story: "Primary MTR node in the Sha Tin part of the itinerary and the main connection point to the hotel and surrounding attractions.",
-      steps: ["Walk: Royal Park Hotel ↔ Sha Tin Station"],
-      photos: [],
-      audio: [],
-      tips: ["MTR is a low-impact urban transport mode compared with private vehicle use."]
     },
     {
       id: "d2-heritage",
@@ -576,27 +463,12 @@ const day2 = {
       title: "Hong Kong Heritage Museum",
       subtitle: "Main Day 2 attraction",
       latlng: [22.37686464076839, 114.18568034099643],
-      story: "The main cultural anchor of Day 2, offering exhibitions that preserve local art, history, and community memory. The Alchemist Cafe is located within the museum complex.",
+      story: "The main cultural anchor of Day 2, offering exhibitions that preserve local art, history, and community memory in a very walkable part of Sha Tin.",
       steps: ["Visit Hong Kong Heritage Museum"],
       photos: [],
       audio: [],
       tips: [
         "Museums support SDG 11 by safeguarding cultural heritage and public education."
-      ]
-    },
-    {
-      id: "d2-garden",
-      category: "garden",
-      title: "Shing Mun River Promenade Garden",
-      subtitle: "Scenic walking stop",
-      latlng: [22.37731973054073, 114.1901384805288],
-      story: "A low-fatigue green stop that brings open space, riverfront views, and walkability into the Day 2 route.",
-      steps: ["Walk between museum / temple / mall cluster and the promenade."],
-      photos: [],
-      audio: [],
-      tips: [
-        "Public green space contributes to healthier, more livable cities under SDG 11.",
-        "Walking-focused routes also reduce transport emissions."
       ]
     },
     {
@@ -616,24 +488,14 @@ const day2 = {
         "./assets/photos/chekung_6.jpg",
         "./assets/photos/chekung_7.jpg"
       ],
+      panoramas: [
+        { src: "./assets/photos/360/panorama_temple_1.JPG", label: "Temple courtyard" },
+        { src: "./assets/photos/360/panorama_temple_2.JPG", label: "Main prayer area" }
+      ],
       audio: [],
       tips: [
         "A shorter walking loop improves accessibility and reduces visitor fatigue.",
         "The temple also supports SDG 11 through preservation of cultural and religious heritage."
-      ]
-    },
-    {
-      id: "d2-ntp",
-      category: "mall",
-      title: "New Town Plaza",
-      subtitle: "Mall / dining / evening stop",
-      latlng: [22.381885603331025, 114.18867739120614],
-      story: "A convenient mixed-use stop near the hotel, combining dining, shopping, and rest in one walkable location. Pici is located inside New Town Plaza.",
-      steps: ["Walk to New Town Plaza"],
-      photos: ["./assets/photos/mall_1.jpg"],
-      audio: [],
-      tips: [
-        "Grouping food and leisure within one node reduces extra travel distance."
       ]
     }
   ]
@@ -723,13 +585,23 @@ function getDayCategories(dayObj) {
   return [...new Set(dayObj.stops.map((s) => s.category))];
 }
 
+function setStoredActiveCategories(dayObj, categories) {
+  const next = new Set(categories);
+  activeCategoriesByDay.set(getDayKey(dayObj), next);
+  activeCategories = new Set(next);
+}
+
 function syncActiveCategories(dayObj) {
   const cats = getDayCategories(dayObj);
-  if (!activeCategories.size || !cats.some((c) => activeCategories.has(c))) {
-    activeCategories = new Set(cats);
-  } else {
-    activeCategories = new Set([...activeCategories].filter((c) => cats.includes(c)));
+  const dayKey = getDayKey(dayObj);
+  const stored = activeCategoriesByDay.get(dayKey);
+
+  if (!stored) {
+    setStoredActiveCategories(dayObj, cats);
+    return;
   }
+
+  setStoredActiveCategories(dayObj, [...stored].filter((c) => cats.includes(c)));
 }
 
 function buildLegend(container, dayObj) {
@@ -748,13 +620,26 @@ function buildLegend(container, dayObj) {
       <span class="filterStatus">${activeCategories.has(cat) ? "Shown" : "Hidden"}</span>
     `;
     btn.addEventListener("click", () => {
-      if (activeCategories.has(cat)) activeCategories.delete(cat);
-      else activeCategories.add(cat);
-      if (activeCategories.size === 0) activeCategories = new Set(cats);
+      const next = new Set(activeCategories);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      setStoredActiveCategories(dayObj, next);
       updateLegendAndMap();
     });
     container.appendChild(btn);
   });
+}
+
+function selectAllLegendCategories() {
+  if (!currentDay) return;
+  setStoredActiveCategories(currentDay, getDayCategories(currentDay));
+  updateLegendAndMap();
+}
+
+function clearAllLegendCategories() {
+  if (!currentDay) return;
+  setStoredActiveCategories(currentDay, []);
+  updateLegendAndMap();
 }
 
 function updateLegendAndMap() {
@@ -1088,6 +973,148 @@ function moveLightbox(step) {
   updateLightbox();
 }
 
+function getStopPanoramas(stop) {
+  return (stop?.panoramas || []).map((item, index) => (
+    typeof item === "string" ? { src: item, label: `View ${index + 1}` } : item
+  ));
+}
+
+function renderPanoramaSection(stop) {
+  const card = document.getElementById("panoramaCard");
+  const list = document.getElementById("panoramaList");
+  const caption = document.getElementById("panoramaCaption");
+  const openBtn = document.getElementById("panoramaOpenBtn");
+  const panoramas = getStopPanoramas(stop);
+
+  if (!card || !list || !caption || !openBtn) return;
+
+  if (!panoramas.length) {
+    card.classList.add("hidden");
+    list.innerHTML = "";
+    return;
+  }
+
+  card.classList.remove("hidden");
+  caption.textContent = panoramas.length === 1
+    ? "Open the immersive panorama and drag around this stop."
+    : `Choose one of ${panoramas.length} immersive panoramas for this stop.`;
+
+  list.innerHTML = "";
+  panoramas.forEach((panorama, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "panoramaChip";
+    button.textContent = panorama.label || `View ${index + 1}`;
+    button.addEventListener("click", () => openPanoramaViewer(panoramas, index, stop.title));
+    list.appendChild(button);
+  });
+
+  openBtn.onclick = () => openPanoramaViewer(panoramas, 0, stop.title);
+}
+
+function updatePanoramaViewer() {
+  const overlay = document.getElementById("panoramaViewer");
+  const canvas = document.getElementById("panoramaCanvas");
+  const counter = document.getElementById("panoramaCounter");
+  const title = document.getElementById("panoramaTitle");
+  const prevBtn = document.getElementById("panoramaPrev");
+  const nextBtn = document.getElementById("panoramaNext");
+
+  if (!overlay || !canvas || !panoramaItems.length) return;
+
+  const current = panoramaItems[panoramaIndex];
+  canvas.style.backgroundImage = `url("${current.src}")`;
+  canvas.style.backgroundPosition = `${panoramaOffsetX}px center`;
+  canvas.setAttribute("aria-label", `${activePanoramaTitle} ${current.label || `view ${panoramaIndex + 1}`}`);
+  counter.textContent = `${panoramaIndex + 1} / ${panoramaItems.length}`;
+  title.textContent = current.label ? `${activePanoramaTitle} - ${current.label}` : activePanoramaTitle || "360 view";
+  prevBtn.disabled = panoramaItems.length <= 1;
+  nextBtn.disabled = panoramaItems.length <= 1;
+}
+
+function openPanoramaViewer(items, index = 0, title = "360 view") {
+  const overlay = document.getElementById("panoramaViewer");
+  if (!overlay || !items?.length) return;
+
+  panoramaItems = items.slice();
+  panoramaIndex = index;
+  activePanoramaTitle = title;
+  panoramaOffsetX = 0;
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("panorama-open");
+  updatePanoramaViewer();
+}
+
+function closePanoramaViewer() {
+  const overlay = document.getElementById("panoramaViewer");
+  if (!overlay) return;
+  overlay.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("panorama-open");
+}
+
+function movePanorama(step) {
+  if (!panoramaItems.length) return;
+  panoramaIndex = (panoramaIndex + step + panoramaItems.length) % panoramaItems.length;
+  panoramaOffsetX = 0;
+  updatePanoramaViewer();
+}
+
+function bindPanoramaViewer() {
+  const overlay = document.getElementById("panoramaViewer");
+  const stage = document.getElementById("panoramaStage");
+  const canvas = document.getElementById("panoramaCanvas");
+  if (!overlay || !stage || !canvas) return;
+
+  document.getElementById("panoramaClose")?.addEventListener("click", closePanoramaViewer);
+  document.getElementById("panoramaPrev")?.addEventListener("click", () => movePanorama(-1));
+  document.getElementById("panoramaNext")?.addEventListener("click", () => movePanorama(1));
+
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closePanoramaViewer();
+  });
+
+  let dragging = false;
+  let startX = 0;
+  let startOffset = 0;
+
+  const onPointerMove = (event) => {
+    if (!dragging) return;
+    panoramaOffsetX = startOffset + (event.clientX - startX);
+    canvas.style.backgroundPosition = `${panoramaOffsetX}px center`;
+  };
+
+  const endPointer = () => {
+    dragging = false;
+    canvas.classList.remove("is-dragging");
+  };
+
+  stage.addEventListener("pointerdown", (event) => {
+    dragging = true;
+    startX = event.clientX;
+    startOffset = panoramaOffsetX;
+    canvas.classList.add("is-dragging");
+    stage.setPointerCapture?.(event.pointerId);
+  });
+
+  stage.addEventListener("pointermove", onPointerMove);
+  stage.addEventListener("pointerup", endPointer);
+  stage.addEventListener("pointercancel", endPointer);
+  stage.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    panoramaOffsetX -= event.deltaY * 0.45;
+    canvas.style.backgroundPosition = `${panoramaOffsetX}px center`;
+  }, { passive: false });
+
+  document.addEventListener("keydown", (event) => {
+    if (!overlay.classList.contains("is-open")) return;
+    if (event.key === "Escape") closePanoramaViewer();
+    if (event.key === "ArrowLeft") movePanorama(-1);
+    if (event.key === "ArrowRight") movePanorama(1);
+  });
+}
+
 function bindLightbox() {
   const overlay = document.getElementById("galleryLightbox");
   if (!overlay) return;
@@ -1134,6 +1161,7 @@ function renderStopContent(dayObj, stop) {
   updateStopTodoButton(dayObj, stop);
 
   buildGallery(document.getElementById("gallery"), stop);
+  renderPanoramaSection(stop);
 
   const audioBox = document.getElementById("audioBox");
   audioBox.innerHTML = "";
@@ -1368,6 +1396,7 @@ function closeStopPage() {
   const page = document.getElementById("stopPage");
   if (!page) return;
   if (page.classList.contains("hidden")) return;
+  closePanoramaViewer();
   page.classList.remove("is-open");
   page.classList.add("is-closing");
   page.setAttribute("aria-hidden", "true");
@@ -1705,6 +1734,10 @@ function bindMapUi() {
   document.getElementById("utilityTabFilters")?.addEventListener("click", () => setUtilityMode("filters"));
   document.getElementById("utilityTabTodo")?.addEventListener("click", () => setUtilityMode("todo"));
   document.getElementById("utilityTabSuggested")?.addEventListener("click", () => setUtilityMode("suggested"));
+  document.getElementById("legendSelectAllBtn")?.addEventListener("click", selectAllLegendCategories);
+  document.getElementById("legendClearAllBtn")?.addEventListener("click", clearAllLegendCategories);
+  document.getElementById("mobileLegendSelectAllBtn")?.addEventListener("click", selectAllLegendCategories);
+  document.getElementById("mobileLegendClearAllBtn")?.addEventListener("click", clearAllLegendCategories);
   mobileBackdropEl()?.addEventListener("click", closeMobileUtilitySheet);
   document.getElementById("stopPageBackBtn")?.addEventListener("click", closeStopPage);
   document.getElementById("stopPageIntroBtn")?.addEventListener("click", showLanding);
@@ -1732,6 +1765,7 @@ function init() {
   initLandingPhotoRail();
   bindMapUi();
   bindLightbox();
+  bindPanoramaViewer();
 
   window.addEventListener("resize", () => {
     refreshMapSize();

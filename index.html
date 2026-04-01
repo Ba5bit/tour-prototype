@@ -239,6 +239,10 @@
           <button id="legendCloseBtn" class="ghostBtn small">Close</button>
         </div>
         <div class="legendStaticList" id="legendStaticList"></div>
+        <div class="legendBulkActions">
+          <button id="legendSelectAllBtn" class="ghostBtn small" type="button">Select all</button>
+          <button id="legendClearAllBtn" class="ghostBtn small" type="button">Clear all</button>
+        </div>
         <div class="drawerSectionTitle">Visible on map</div>
         <div id="legendFilters" class="legendFilters legendFiltersList"></div>
       </aside>
@@ -285,6 +289,10 @@
         </div>
         <div id="utilityFiltersPane" class="utilityPane">
           <div id="mobileLegendStaticList" class="legendStaticList compact"></div>
+          <div class="legendBulkActions compact">
+            <button id="mobileLegendSelectAllBtn" class="ghostBtn small" type="button">Select all</button>
+            <button id="mobileLegendClearAllBtn" class="ghostBtn small" type="button">Clear all</button>
+          </div>
           <div id="mobileLegendFilters" class="legendFilters legendFiltersList"></div>
         </div>
         <div id="utilityTodoPane" class="utilityPane hidden">
@@ -324,6 +332,15 @@
                 <h3>Photos</h3>
                 <div id="gallery" class="gallery"></div>
               </section>
+
+              <section id="panoramaCard" class="card hidden">
+                <div class="cardHeadInline">
+                  <h3>360 view</h3>
+                  <button id="panoramaOpenBtn" class="ghostBtn small" type="button">Open 360 view</button>
+                </div>
+                <p id="panoramaCaption" class="muted">Pan around this location in an immersive view.</p>
+                <div id="panoramaList" class="panoramaList"></div>
+              </section>
             </div>
 
             <aside class="stopPageSide">
@@ -357,6 +374,23 @@
       <img id="lightboxImage" class="lightboxImage" src="" alt="" />
     </div>
     <button id="lightboxNext" class="lightboxNav lightboxNext" aria-label="Next photo"><span>›</span></button>
+  </div>
+
+  <div id="panoramaViewer" class="panoramaViewer" aria-hidden="true">
+    <div class="panoramaChrome">
+      <div class="panoramaMeta">
+        <div id="panoramaTitle" class="panoramaTitle">360 view</div>
+        <div id="panoramaCounter" class="panoramaCounter">1 / 1</div>
+      </div>
+      <button id="panoramaClose" class="lightboxIconBtn" aria-label="Close 360 view">✕</button>
+    </div>
+
+    <button id="panoramaPrev" class="lightboxNav lightboxPrev" aria-label="Previous panorama"><span>‹</span></button>
+    <div id="panoramaStage" class="panoramaStage">
+      <div id="panoramaCanvas" class="panoramaCanvas" role="img" aria-label="Interactive 360 panorama"></div>
+      <div class="panoramaHint">Drag or swipe to look around</div>
+    </div>
+    <button id="panoramaNext" class="lightboxNav lightboxNext" aria-label="Next panorama"><span>›</span></button>
   </div>
 </body>
 </html>
