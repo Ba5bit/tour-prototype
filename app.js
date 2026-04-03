@@ -230,8 +230,12 @@ const ICONS = {
   bus: makeSvgIcon("./assets/icons/bus-stop-svgrepo-com.svg"),
   mtr: makeSvgIcon("./assets/icons/hong-kong-metro-logo-svgrepo-com.svg"),
   restaurant: makeSvgIcon("./assets/icons/restaurant-svgrepo-com.svg"),
+  "convenience-store": makeSvgIcon("./assets/icons/convenience-store-svgrepo-com.svg"),
+  store: makeSvgIcon("./assets/icons/store-svgrepo-com.svg"),
+  toilet: makeSvgIcon("./assets/icons/toilet-restroom-svgrepo-com.svg"),
   hotel: makeSvgIcon("./assets/icons/building-big-svgrepo-com.svg"),
   mall: makeSvgIcon("./assets/icons/shopping-center-svgrepo-com.svg"),
+  hiking: makeSvgIcon("./assets/icons/mountain-road-svgrepo-com.svg"),
   garden: makeSvgIcon("./assets/icons/garden-svgrepo-com.svg"),
   museum: makeSvgIcon("./assets/icons/museum-svgrepo-com.svg"),
   railway: makeSvgIcon("./assets/icons/train-svgrepo-com (1).svg"),
@@ -347,6 +351,62 @@ const day1 = {
         "Respect the site and keep waste to a minimum.",
         "Sustainable tourism here supports SDG 11 by protecting cultural heritage.",
         "Responsible visitor behavior also supports SDG 12 through lower-waste consumption."
+      ]
+    },
+    {
+      id: "d1-paktaitoyan",
+      category: "hiking",
+      title: "Pak Tai To Yan",
+      subtitle: "Tai Po ridge walk with long open views",
+      latlng: [22.467113267435742, 114.13326730859701],
+      story: "Pak Tai To Yan is one of the exposed high points on the Tai To Yan ridge, a grassy upland route that Hong Kong Tourism Board describes as a sweeping mountain path with broad New Territories views. The route is known for its long ridgeline feel, open scenery, and more demanding climbs than the gentler cultural stops in Tai Po.",
+      routeSummary: "From the Tai Po day cluster, the most practical access is via Tai Po Market Station and KMB 64K toward Kadoorie Farm, then the climb begins on Tai To Yan Path.",
+      difficulty: "Difficult",
+      distance: "About 10 km",
+      duration: "About 4 hours",
+      steps: [
+        "Start from Tai Po Market Station.",
+        "Take KMB 64K and get off near Kadoorie Farm / Tai To Yan trail access.",
+        "Follow Tai To Yan Path up the ridge toward Tai To Yan and continue to Pak Tai To Yan.",
+        "Return by descending toward Fanling or retracing the ridge only if weather and energy still allow."
+      ],
+      photos: [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Pak%20Tai%20To%20Yan%20Summit.jpg"
+      ],
+      footprint: "Estimated footprint: 0.4-1.1 kg CO2e if reached by shared bus from Tai Po and completed on foot.",
+      tips: [
+        "This is a more exposed ridge walk, so avoid it in poor visibility, rain, or strong heat.",
+        "Carry enough water before leaving Tai Po because there are no convenient resupply points once you are on the ridge.",
+        "The difficulty rating is based on the Hong Kong Tourism Board trail guide for Tai To Yan and the exposed ridge section leading to Pak Tai To Yan."
+      ]
+    },
+    {
+      id: "d1-ngtungchai",
+      category: "hiking",
+      title: "Ng Tung Chai Waterfalls",
+      subtitle: "Forest trail to four waterfalls below Tai Mo Shan",
+      latlng: [22.427151900991586, 114.13172579800211],
+      story: "Ng Tung Chai Waterfalls is one of the best-known waterfall hikes in Hong Kong, with Bottom, Middle, Main, and Scatter Falls stepping upward through lush foothill forest below Tai Mo Shan. Hong Kong Tourism Board describes it as a scenic but demanding route where the cooling waterfall views are the reward for a steady uphill climb.",
+      routeSummary: "From Tai Po, the official access is straightforward: go to Tai Po Market Station, take KMB 64K, get off at Ng Tung Chai, and follow the signed trail in from the road.",
+      difficulty: "Difficult",
+      distance: "About 7 km",
+      duration: "About 3 - 4 hours",
+      steps: [
+        "Start from Tai Po Market Station.",
+        "Walk to the adjacent bus stop and take KMB 64K toward Yuen Long.",
+        "Get off at Ng Tung Chai and follow the signs past the monastery toward Bottom Fall.",
+        "Continue uphill through the waterfall sequence if conditions are safe, then return to the same roadside stop for the bus back to Tai Po."
+      ],
+      photos: [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Ng%20Tung%20Chai%20Waterfalls%2C%20Hong%20Kong.jpg",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Old%20Temple%2C%20Ng%20Tung%20Chai%20Waterfalls%2C%20Hong%20Kong.jpg",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Old%20Temple%2C%20Ng%20Tung%20Chai%20Waterfalls%2C%20Hong%20Kong%20-%2048114780618.jpg"
+      ],
+      footprint: "Estimated footprint: 0.4-1.0 kg CO2e when combined with bus access from Tai Po and the hike itself.",
+      tips: [
+        "The route becomes slippery after rain, especially around rocks, steps, and waterfall spray zones.",
+        "Hong Kong Tourism Board notes there are no water refill points or food stalls once you leave Tai Po, so stock up first.",
+        "If trail conditions look poor, treat Bottom Fall as the turnaround point instead of forcing the full ascent."
       ]
     },
     {
@@ -497,9 +557,398 @@ const day2 = {
         "A shorter walking loop improves accessibility and reduces visitor fatigue.",
         "The temple also supports SDG 11 through preservation of cultural and religious heritage."
       ]
+    },
+    {
+      id: "d2-lionrock",
+      category: "hiking",
+      title: "Lion Rock",
+      subtitle: "Iconic summit above Kowloon and Sha Tin",
+      latlng: [22.352645500574166, 114.1870615825635],
+      story: "Lion Rock is one of Hong Kong's most iconic summits, rising to 495 metres and marking the mountainous edge between Kowloon and Sha Tin. According to the Agriculture, Fisheries and Conservation Department, the peak is reached by traditional stone trails on both sides and is prized for its rugged western escarpment and broad city views.",
+      routeSummary: "From the Sha Tin day base, the closest practical approach is from the Sha Tin side via the eastern stone-trail access around Sha Tin Pass Road / Tsok Pok Hang before climbing to the summit ridge.",
+      difficulty: "Moderate to difficult",
+      distance: "Variable approach; summit section is steep",
+      duration: "Allow about 2.5 - 4 hours depending on the chosen approach",
+      steps: [
+        "Start from the Sha Tin side and head toward the Sha Tin Pass Road / Tsok Pok Hang access for Lion Rock Country Park.",
+        "Follow the eastern stone trail uphill toward Lion Rock Pass and the summit junctions.",
+        "Complete the final steep climb carefully, especially near exposed rock and uneven steps.",
+        "Descend before dark and avoid continuing in poor weather because the summit section is more demanding than the riverside Sha Tin stops."
+      ],
+      photos: [
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Lion%20Rock%20trail%20%2851062880992%29.jpg",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hong%20Kong%20views%20from%20Lion%20Rock%20%2851062796116%29.jpg",
+        "https://commons.wikimedia.org/wiki/Special:Redirect/file/Lion%20Rock%2C%20Hong%20Kong.jpg"
+      ],
+      footprint: "Estimated footprint: 0.3-0.9 kg CO2e when approached from Sha Tin by short public-transport hops and completed mostly on foot.",
+      tips: [
+        "The summit approach is steeper and more exposed than the heritage walk stops in Sha Tin, so treat it as a separate higher-effort add-on.",
+        "This difficulty estimate is an inference from AFCD's descriptions of the summit trails, the eastern stone path, and the steeper Lion Rock sections in the park.",
+        "Start early if the weather is humid, and avoid ridge walking when storms or low visibility are forecast."
+      ]
     }
   ]
 };
+
+day2.stops.push(
+  {
+    id: "d2-shingkee",
+    category: "restaurant",
+    tooltipOnly: true,
+    title: "Shing Kee Noodles",
+    subtitle: "Local noodle shop near the river corridor",
+    latlng: [22.384947849433182, 114.19099029999998],
+    openingHours: "06:00 - 16:00, 19:00 - 23:00",
+    shortInfo: "A well-known local noodle stop in Sha Tin with a casual open-air setting that fits the museum and temple cluster.",
+    footprintEstimate: "Estimated meal footprint: moderate, around 1.8-2.6 kg CO2e for a typical pork or beef noodle meal.",
+    websiteUrl: "https://www.google.com/maps?q=22.384947849433182,114.19099029999998",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-simplylife",
+    category: "restaurant",
+    tooltipOnly: true,
+    title: "SimplyLife Bakery Cafe",
+    subtitle: "Cafe option near Sha Tin Station",
+    latlng: [22.38237836875854, 114.18833909999998],
+    openingHours: "07:30 - 22:00",
+    shortInfo: "An easy bakery cafe option close to the Sha Tin hub, useful before or after the heritage stops.",
+    footprintEstimate: "Estimated meal footprint: low-to-moderate, around 0.8-1.6 kg CO2e for bakery, salad, or lighter cafe meals.",
+    websiteUrl: "https://www.google.com/maps?q=22.38237836875854,114.18833909999998",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-newtownplaza",
+    category: "mall",
+    tooltipOnly: true,
+    title: "New Town Plaza",
+    subtitle: "Main food and supplies hub in Sha Tin",
+    latlng: [22.381885603331025, 114.18867739120614],
+    openingHours: "07:00 - 00:00 public area; most restaurants 11:00 - 22:00",
+    shortInfo: "Large mall with diverse dining and supermarket options, making it the main practical hub near the museum and Che Kung Temple route.",
+    websiteUrl: "https://www.newtownplaza.com.hk/",
+    websiteLabel: "Official website",
+    photos: []
+  },
+  {
+    id: "d2-7eleven-chekung",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "7-Eleven (Che Kung Temple MTR Station)",
+    subtitle: "Quick drinks and snacks stop",
+    latlng: [22.374648255009102, 114.18594872461193],
+    openingHours: "06:30 - 23:00",
+    shortInfo: "Handy for a quick water or snack pickup right by the Che Kung Temple station area.",
+    websiteUrl: "https://www.google.com/maps?q=22.374648255009102,114.18594872461193",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-7eleven-shatin",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "7-Eleven (Sha Tin MTR Station)",
+    subtitle: "Station convenience stop",
+    latlng: [22.382725232491214, 114.18744479130169],
+    openingHours: "06:00 - 00:00",
+    shortInfo: "Useful for quick supplies around the Sha Tin rail hub before heading out or returning.",
+    websiteUrl: "https://www.google.com/maps?q=22.382725232491214,114.18744479130169",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-circlek-jatmin",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "Circle K (Jat Min Chuen)",
+    subtitle: "24-hour convenience store",
+    latlng: [22.377222362928315, 114.19115936931037],
+    openingHours: "24 hours",
+    shortInfo: "A 24-hour option near the Sha Tin riverside neighborhood if you need essentials late in the day.",
+    websiteUrl: "https://www.google.com/maps?q=22.377222362928315,114.19115936931037",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-toilet-shatintau",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Sha Tin Tau Village Public Toilet",
+    subtitle: "24-hour public toilet with accessible facilities",
+    latlng: [22.37390186872732, 114.1895026],
+    openingHours: "24 hours",
+    shortInfo: "Useful toilet stop near the Che Kung Temple side of the route, including accessible facilities.",
+    websiteUrl: "https://www.google.com/maps?q=22.37390186872732,114.1895026",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-toilet-shingho",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Shing Ho Road Public Toilet & Bathhouse",
+    subtitle: "24-hour public toilet",
+    latlng: [22.376226612532374, 114.1793567730172],
+    openingHours: "24 hours",
+    shortInfo: "A public toilet and bathhouse option on the Tai Wai side of the Sha Tin heritage route.",
+    websiteUrl: "https://www.google.com/maps?q=22.376226612532374,114.1793567730172",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d2-toilet-taiwai",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Tai Wai Station PTI Public Toilet",
+    subtitle: "24-hour public toilet at the interchange",
+    latlng: [22.37331501512663, 114.18091008465517],
+    openingHours: "24 hours",
+    shortInfo: "Convenient toilet stop right by the public transport interchange near Tai Wai.",
+    websiteUrl: "https://www.google.com/maps?q=22.37331501512663,114.18091008465517",
+    websiteLabel: "Google Maps",
+    photos: []
+  }
+);
+
+day1.stops.push(
+  {
+    id: "d1-citylink",
+    category: "mall",
+    tooltipOnly: true,
+    title: "Citylink Plaza",
+    subtitle: "Supplies before the monastery climb",
+    latlng: [22.382757569880205, 114.18756474096665],
+    openingHours: "10:00 - 22:00",
+    shortInfo: "Directly connected to Sha Tin Station and a practical place to pick up drinks or snacks before heading to Ten Thousand Buddhas Monastery.",
+    websiteUrl: "https://www.google.com/maps?q=22.382757569880205,114.18756474096665",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-yata",
+    category: "store",
+    tooltipOnly: true,
+    title: "YATA Supermarket (New Town Plaza)",
+    subtitle: "Large supermarket option",
+    latlng: [22.37977013771574, 114.18762337301725],
+    openingHours: "10:00 - 22:30",
+    shortInfo: "A larger supermarket choice near Sha Tin Station if you want to stock up before the monastery climb.",
+    websiteUrl: "https://www.google.com/maps?q=22.37977013771574,114.18762337301725",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-7eleven-lekyuen",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "7-Eleven (Lek Yuen Estate)",
+    subtitle: "24-hour convenience store",
+    latlng: [22.384575193043453, 114.19072645767241],
+    openingHours: "24 hours",
+    shortInfo: "Convenient for a last-minute drink or snack near the Sha Tin monastery approach.",
+    websiteUrl: "https://www.google.com/maps?q=22.384575193043453,114.19072645767241",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-toilet-sheungpaitau",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Sheung Pai Tau Village Public Toilet",
+    subtitle: "24-hour public toilet",
+    latlng: [22.38555198559541, 114.18547442698276],
+    openingHours: "24 hours",
+    shortInfo: "The closest public toilet option near the lower approach to Ten Thousand Buddhas Monastery.",
+    websiteUrl: "https://www.google.com/maps?q=22.38555198559541,114.18547442698276",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-toilet-yuenwo",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Yuen Wo Road Recreation Ground Public Toilet",
+    subtitle: "24-hour public toilet",
+    latlng: [22.385204845265893, 114.19540242883622],
+    openingHours: "24 hours",
+    shortInfo: "A backup 24-hour toilet option in the wider Sha Tin area before or after the monastery visit.",
+    websiteUrl: "https://www.google.com/maps?q=22.385204845265893,114.19540242883622",
+    websiteLabel: "Google Maps",
+    photos: []
+  }
+);
+
+day1.stops.push(
+  {
+    id: "d1-taipo-food-centre",
+    category: "restaurant",
+    tooltipOnly: true,
+    title: "Tai Po Market Cooked Food Centre",
+    subtitle: "Classic cooked-food stop in Tai Po",
+    latlng: [22.446059247421854, 114.16668750955182],
+    openingHours: "06:00 - 02:00 (varies by stall)",
+    shortInfo: "A classic Tai Po option for dai pai dong style local food near the old market area.",
+    footprintEstimate: "Estimated meal footprint: moderate-to-high, around 1.5-3.0 kg CO2e depending on how meat-heavy the chosen dishes are.",
+    websiteUrl: "https://www.google.com/maps?q=22.446059247421854,114.16668750955182",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-lamkee-dimsum",
+    category: "restaurant",
+    tooltipOnly: true,
+    title: "Lam Kee Dim Sum",
+    subtitle: "Casual dim sum stop in Tai Po",
+    latlng: [22.446528178726883, 114.16643008883756],
+    openingHours: "Hours vary",
+    shortInfo: "A convenient Tai Po stop for a lighter sit-down meal before continuing through the old market area.",
+    footprintEstimate: "Estimated meal footprint: around 0.9-1.8 kg CO2e depending on whether you choose mostly steamed dishes or meat-heavy baskets.",
+    photos: []
+  },
+  {
+    id: "d1-tungkee-noodles",
+    category: "restaurant",
+    tooltipOnly: true,
+    title: "Tung Kee Noodles Restaurant",
+    subtitle: "Local noodle stop near Tai Po Market",
+    latlng: [22.446207380904212, 114.16672341719718],
+    openingHours: "Hours vary",
+    shortInfo: "A quick local-style noodle option close to the Tai Po Market food cluster and transport links.",
+    footprintEstimate: "Estimated meal footprint: around 1.0-2.0 kg CO2e depending on broth choice and whether you order meat or fishball toppings.",
+    photos: []
+  },
+  {
+    id: "d1-grandmas-tofu-pudding",
+    category: "restaurant",
+    tooltipOnly: true,
+    title: "Grandma's Tofu Pudding",
+    subtitle: "Sweet tofu dessert stop",
+    latlng: [22.446685550358527, 114.16687785217628],
+    openingHours: "Hours vary",
+    shortInfo: "A gentle dessert break for tofu pudding and lighter snacks in the Tai Po Market cluster.",
+    footprintEstimate: "Estimated meal footprint: around 0.2-0.6 kg CO2e for a tofu-based dessert or light snack.",
+    photos: []
+  },
+  {
+    id: "d1-taiwo-plaza",
+    category: "mall",
+    tooltipOnly: true,
+    title: "Tai Wo Plaza",
+    subtitle: "Mall and supermarket cluster",
+    latlng: [22.451699967329297, 114.16171774562895],
+    openingHours: "24 hours public area; most shops 10:00 - 22:00",
+    shortInfo: "A practical stop near the railway museum area for food, groceries, and indoor supplies.",
+    websiteUrl: "https://www.linkhk.com/",
+    websiteLabel: "Official website",
+    photos: []
+  },
+  {
+    id: "d1-parknshop-honglokyuen",
+    category: "store",
+    tooltipOnly: true,
+    title: "PARKnSHOP (Hong Lok Yuen)",
+    subtitle: "Closest large supermarket to Lam Tsuen",
+    latlng: [22.46222185471413, 114.15230114418102],
+    openingHours: "08:00 - 22:30",
+    shortInfo: "Useful if you want to buy supplies before or after heading out toward Lam Tsuen.",
+    websiteUrl: "https://www.google.com/maps?q=22.46222185471413,114.15230114418102",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-7eleven-taiyuen",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "7-Eleven (Tai Yuen Shopping Centre)",
+    subtitle: "24-hour convenience stop",
+    latlng: [22.45548786423923, 114.16815563862076],
+    openingHours: "24 hours",
+    shortInfo: "Convenient for quick drinks or snacks near the railway museum side of Tai Po.",
+    websiteUrl: "https://www.google.com/maps?q=22.45548786423923,114.16815563862076",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-7eleven-taiwo",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "7-Eleven (Tai Wo Plaza)",
+    subtitle: "24-hour convenience store",
+    latlng: [22.450532203271074, 114.1601681153448],
+    openingHours: "24 hours",
+    shortInfo: "A practical quick-stop convenience store close to the Tai Wo Plaza area.",
+    websiteUrl: "https://www.google.com/maps?q=22.450532203271074,114.1601681153448",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-circlek-fortune",
+    category: "convenience-store",
+    tooltipOnly: true,
+    title: "Circle K (Fortune Plaza)",
+    subtitle: "24-hour convenience store",
+    latlng: [22.452889637322233, 114.16804413752509],
+    openingHours: "24 hours",
+    shortInfo: "Useful for fast supplies in the Tai Po town center area.",
+    websiteUrl: "https://www.google.com/maps?q=22.452889637322233,114.16804413752509",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-kwanyik",
+    category: "store",
+    tooltipOnly: true,
+    title: "Kwan Yik Store",
+    subtitle: "Village store in Lam Tsuen",
+    latlng: [22.45086739342115, 114.13750897873204],
+    openingHours: "10:00 - 00:00",
+    shortInfo: "A small local village store within the Lam Tsuen area for simple drinks and essentials.",
+    websiteUrl: "https://www.google.com/maps?q=22.45086739342115,114.13750897873204",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-toilet-oldmarket",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Tai Po Old Market Public Toilet",
+    subtitle: "24-hour public toilet with accessible facilities",
+    latlng: [22.454883888667727, 114.1655211846552],
+    openingHours: "24 hours",
+    shortInfo: "A useful toilet stop in the old market area close to the Man Mo Temple and Tai Po center cluster.",
+    websiteUrl: "https://www.google.com/maps?q=22.454883888667727,114.1655211846552",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-toilet-fongmapo",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Fong Ma Po Public Toilet",
+    subtitle: "24-hour public toilet by Lam Tsuen",
+    latlng: [22.457286522855238, 114.1413778],
+    openingHours: "24 hours",
+    shortInfo: "Located right next to the Lam Tsuen Wishing Tree and includes accessible facilities.",
+    websiteUrl: "https://www.google.com/maps?q=22.457286522855238,114.1413778",
+    websiteLabel: "Google Maps",
+    photos: []
+  },
+  {
+    id: "d1-toilet-taipotau",
+    category: "toilet",
+    tooltipOnly: true,
+    title: "Tai Po Tau Village South Public Toilet",
+    subtitle: "24-hour public toilet",
+    latlng: [22.45466586579444, 114.1565202],
+    openingHours: "24 hours",
+    shortInfo: "A backup public toilet option for the wider Tai Po route if you are moving between clusters.",
+    websiteUrl: "https://www.google.com/maps?q=22.45466586579444,114.1565202",
+    websiteLabel: "Google Maps",
+    photos: []
+  }
+);
 
 /* ---------- RENDER ---------- */
 
@@ -540,7 +989,11 @@ const categoryLabels = {
   hotel: "Hotels",
   mtr: "MTR",
   bus: "Bus stops",
+  hiking: "Hiking spots",
   restaurant: "Restaurants",
+  "convenience-store": "Convenience stores",
+  store: "Stores",
+  toilet: "Public toilets",
   mall: "Malls",
   garden: "Gardens",
   museum: "Museums",
@@ -550,11 +1003,15 @@ const categoryLabels = {
   exhibition: "Exhibitions"
 };
 
-const categoryLegendOrder = ["restaurant", "mtr", "bus", "exhibition", "tree", "temple", "museum", "hotel", "railway", "mall", "garden"];
+const categoryLegendOrder = ["restaurant", "convenience-store", "store", "toilet", "mtr", "bus", "hiking", "exhibition", "tree", "temple", "museum", "hotel", "railway", "mall", "garden"];
 const categoryLegendNames = {
   restaurant: "Canteen | Restaurant",
+  "convenience-store": "Convenience store",
+  store: "Store",
+  toilet: "Public toilet",
   mtr: "MTR",
   bus: "Bus stop",
+  hiking: "Hiking spot",
   exhibition: "Exhibition",
   tree: "Lam Tsuen Wishing Tree",
   temple: "Temple",
@@ -564,6 +1021,48 @@ const categoryLegendNames = {
   mall: "Shopping",
   garden: "Garden"
 };
+
+const audioGuideLabels = {
+  cn: "Chinese",
+  ct: "Cantonese",
+  en: "English"
+};
+
+const audioGuideCatalog = {
+  "d2-chekung": {
+    cn: ["./assets/sounds/cn/Che Kung Temple.mp3"],
+    ct: ["./assets/sounds/ct/Che Kung Temple(Female).mp3", "./assets/sounds/ct/Che Kung Temple(Male).mp3"],
+    en: ["./assets/sounds/en/Che Kung Temple(Female).mp3", "./assets/sounds/en/Che Kung Temple (Male).mp3"]
+  },
+  "d2-heritage": {
+    cn: ["./assets/sounds/cn/Hong Kong Heritage Museum.mp3"],
+    ct: ["./assets/sounds/ct/Hong Kong Heritage Museum(Female).mp3", "./assets/sounds/ct/Hong Kong Heritage Museum（Male）.mp3"],
+    en: ["./assets/sounds/en/Hong Kong Heritage Museum（Female）.mp3", "./assets/sounds/en/Hong Kong Heritage Museum（Male）.mp3"]
+  },
+  "d1-railway": {
+    cn: ["./assets/sounds/cn/Hong Kong Railway Museum.mp3"],
+    ct: ["./assets/sounds/ct/Hong Kong Railway Museum(Female).mp3", "./assets/sounds/ct/Hong Kong Railway Museum(Male).mp3"],
+    en: ["./assets/sounds/en/Hong Kong Railway Museum（Female）.mp3", "./assets/sounds/en/Hong Kong Railway Museum（Male）.mp3"]
+  },
+  "d1-lamtsuen": {
+    cn: ["./assets/sounds/cn/Lam Tsuen Village.mp3"],
+    ct: ["./assets/sounds/ct/Lam Tsuen Village(Female).mp3", "./assets/sounds/ct/Lam Tsuen Village(Male).mp3"],
+    en: ["./assets/sounds/en/Lam Tsuen（Female）.mp3", "./assets/sounds/en/Lam Tsuen（Male）.mp3"]
+  },
+  "d1-manmo": {
+    cn: ["./assets/sounds/cn/Tai Po Man Mo Temple.mp3"],
+    ct: ["./assets/sounds/ct/Tai Po Man Mo Temple(Female).mp3", "./assets/sounds/ct/Tai Po Man Mo Temple(Male).mp3"],
+    en: ["./assets/sounds/en/Tai Po Man Mo Temple（Female）.mp3", "./assets/sounds/en/Tai Po Man Mo Temple（Male）.mp3"]
+  },
+  "d1-buddhas": {
+    cn: ["./assets/sounds/cn/Ten Thousand Buddhas Monastery.mp3"],
+    ct: ["./assets/sounds/ct/Ten Thousand Buddhas Monastery(Female).mp3", "./assets/sounds/ct/Ten Thousand Buddhas Monastery(Male).mp3"],
+    en: ["./assets/sounds/en/Ten Thousand Buddhas Monastery（Female）.mp3", "./assets/sounds/en/Ten Thousand Buddhas Monastery（Male）.mp3"]
+  }
+};
+
+const audioGuideChoiceCache = new Map();
+let selectedAudioGuideLanguage = "en";
 
 function getCategoryIconUrl(category) {
   return getIcon(category)?.options?.iconUrl || "";
@@ -652,17 +1151,21 @@ function updateLegendAndMap() {
 }
 
 const footprintByCategory = {
-  hotel: "Very low additional footprint here. This is mainly a stay/start node rather than a transport-heavy attraction.",
-  mtr: "Low estimated transport footprint. Rail is one of the lighter-impact ways to move through the route.",
-  bus: "Moderate but still shared-impact transport. Better than point-to-point private rides for this route.",
-  restaurant: "Mostly depends on dining choices. Lower-waste and plant-forward meals make this stop lighter-impact.",
-  mall: "Low-to-moderate footprint if combined with other stops on foot rather than treated as a separate trip.",
-  garden: "Low route footprint. Walking and public open space keep this stop relatively light-impact.",
-  museum: "Low route footprint when visited inside a walkable day cluster.",
-  railway: "Low route footprint. This stop works best as a short walk between nearby attractions.",
-  tree: "Low route footprint with a strong sustainability angle through nature-based experience.",
-  temple: "Low route footprint when combined with walking or shared transport.",
-  exhibition: "Low-to-moderate route footprint depending on how much extra transport is required."
+  hotel: "Estimated footprint: 0.1-0.3 kg CO2e for this route stop. Mainly a base/start node rather than a separate attraction trip.",
+  mtr: "Estimated footprint: 0.2-0.6 kg CO2e per stop-to-stop segment. Rail is one of the lighter-impact transport choices on this route.",
+  bus: "Estimated footprint: 0.4-1.0 kg CO2e per shared bus/minibus segment. Still lower-impact than point-to-point private rides.",
+  hiking: "Estimated footprint: 0.3-1.0 kg CO2e when the trail is reached by shared transport and completed on foot.",
+  restaurant: "Estimated footprint: 0.8-3.0 kg CO2e per meal, depending on how meat-heavy the food is.",
+  "convenience-store": "Estimated footprint: 0.1-0.4 kg CO2e for a quick purchase stop, excluding any larger packaged-food load.",
+  store: "Estimated footprint: 0.1-0.5 kg CO2e for a short supplies stop, assuming it is combined with the existing route.",
+  toilet: "Estimated footprint: less than 0.1 kg CO2e for a short utility stop within the existing walking route.",
+  mall: "Estimated footprint: 0.2-0.8 kg CO2e if visited as part of the same walking/transit cluster rather than a separate trip.",
+  garden: "Estimated footprint: 0.1-0.4 kg CO2e. Mostly walking-based with very low additional impact.",
+  museum: "Estimated footprint: 0.2-0.7 kg CO2e when visited within the same walkable day cluster.",
+  railway: "Estimated footprint: 0.2-0.6 kg CO2e. Works best as a short walk between nearby attractions.",
+  tree: "Estimated footprint: 0.2-0.7 kg CO2e, mostly from the shared public-transport access rather than the stop itself.",
+  temple: "Estimated footprint: 0.2-0.8 kg CO2e when combined with walking or shared transport.",
+  exhibition: "Estimated footprint: 0.3-1.0 kg CO2e depending on how much extra transport is needed to reach it."
 };
 
 function getDayKey(dayObj) {
@@ -670,16 +1173,29 @@ function getDayKey(dayObj) {
 }
 
 function getFootprintText(stop) {
-  return stop.footprint || footprintByCategory[stop.category] || "Low-to-moderate footprint estimate for this stop within the suggested route.";
+  return stop.footprint || footprintByCategory[stop.category] || "Estimated footprint: 0.3-1.0 kg CO2e for a short stop within the suggested route.";
 }
 
 function getPreviewPhoto(stop) {
   if (stop.photos?.length) return stop.photos[0];
+  const escapeSvgText = (value) => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const title = escapeSvgText(stop?.title || "Location preview");
+  const category = escapeSvgText(categoryLabels[stop?.category] || "Route stop");
   return "data:image/svg+xml;utf8," + encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420">
-      <rect width="800" height="420" fill="#eef2f5"/>
-      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#7a8a9a" font-size="34" font-family="Arial, sans-serif">
-        No preview photo yet
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff7ea"/>
+          <stop offset="100%" stop-color="#f2dcc2"/>
+        </linearGradient>
+      </defs>
+      <rect width="800" height="420" fill="url(#bg)"/>
+      <rect x="38" y="38" width="724" height="344" rx="28" fill="rgba(255,255,255,0.72)" stroke="rgba(186,122,38,0.16)"/>
+      <text x="50%" y="44%" dominant-baseline="middle" text-anchor="middle" fill="#8a5417" font-size="24" font-family="Arial, sans-serif" letter-spacing="3">
+        ${category.toUpperCase()}
+      </text>
+      <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" fill="#2d3d4c" font-size="34" font-family="Arial, sans-serif" font-weight="700">
+        ${title}
       </text>
     </svg>
   `);
@@ -689,8 +1205,109 @@ function isTransportStop(stop) {
   return stop?.category === "bus" || stop?.category === "mtr";
 }
 
+function isTooltipOnlyStop(stop) {
+  return isTransportStop(stop) || !!stop?.tooltipOnly;
+}
+
 function getTransportTooltipSteps(stop) {
   return (stop.steps || []).filter(Boolean).slice(0, 4);
+}
+
+function getStopMapUrl(stop) {
+  const [lat, lng] = stop?.latlng || [];
+  if (typeof lat !== "number" || typeof lng !== "number") return "";
+  return `https://www.google.com/maps?q=${lat},${lng}`;
+}
+
+function getTooltipLinks(stop) {
+  const links = [];
+  if (stop.websiteUrl && stop.websiteLabel && stop.websiteLabel !== "Google Maps") {
+    links.push(`<a class="tooltipLink" href="${stop.websiteUrl}" target="_blank" rel="noreferrer">${stop.websiteLabel}</a>`);
+  }
+
+  return links.join("");
+}
+
+function getTooltipTodoButton(stop) {
+  if (stop?.category !== "mall" || !currentDay) return "";
+  const order = getTodoOrder(currentDay, stop);
+  const added = order > 0;
+  return `
+    <button
+      class="tooltipTodoBtn ${added ? "is-added" : ""}"
+      type="button"
+      data-tooltip-todo="${stop.id}"
+      aria-pressed="${added ? "true" : "false"}"
+    >
+      ${added ? `Added as stop #${order}` : "Add to to-do list"}
+    </button>
+  `;
+}
+
+function getAudioGuideOptions(stop) {
+  const entry = audioGuideCatalog[stop?.id];
+  if (!entry) return null;
+
+  const result = {};
+  Object.entries(entry).forEach(([lang, files]) => {
+    if (!files?.length) return;
+    const cacheKey = `${stop.id}:${lang}`;
+    if (!audioGuideChoiceCache.has(cacheKey)) {
+      const choice = files[Math.floor(Math.random() * files.length)];
+      audioGuideChoiceCache.set(cacheKey, choice);
+    }
+    result[lang] = audioGuideChoiceCache.get(cacheKey);
+  });
+
+  return Object.keys(result).length ? result : null;
+}
+
+function renderAudioGuide(stop) {
+  const audioBox = document.getElementById("audioBox");
+  if (!audioBox) return;
+
+  const guideOptions = getAudioGuideOptions(stop);
+  audioBox.innerHTML = "";
+
+  if (!guideOptions) {
+    audioBox.innerHTML = `<p class="muted">No audio guide for this stop yet.</p>`;
+    return;
+  }
+
+  const languages = Object.keys(guideOptions);
+  if (!languages.includes(selectedAudioGuideLanguage)) {
+    selectedAudioGuideLanguage = languages[0];
+  }
+
+  const tabs = document.createElement("div");
+  tabs.className = "audioGuideTabs";
+  languages.forEach((lang) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `audioGuideTab ${lang === selectedAudioGuideLanguage ? "active" : ""}`;
+    button.textContent = audioGuideLabels[lang] || lang.toUpperCase();
+    button.addEventListener("click", () => {
+      selectedAudioGuideLanguage = lang;
+      if (currentStop?.id === stop.id) renderAudioGuide(stop);
+    });
+    tabs.appendChild(button);
+  });
+
+  const meta = document.createElement("div");
+  meta.className = "audioGuideMeta";
+  meta.textContent = `Guide available in ${languages.map((lang) => audioGuideLabels[lang] || lang.toUpperCase()).join(", ")}.`;
+
+  const playerWrap = document.createElement("div");
+  playerWrap.className = "audioGuidePlayer";
+  const audio = document.createElement("audio");
+  audio.controls = true;
+  audio.preload = "none";
+  audio.src = guideOptions[selectedAudioGuideLanguage];
+  playerWrap.appendChild(audio);
+
+  audioBox.appendChild(tabs);
+  audioBox.appendChild(meta);
+  audioBox.appendChild(playerWrap);
 }
 
 function saveChecklistState(dayKey, index, checked) {
@@ -740,6 +1357,13 @@ function toggleStopTodo(dayObj, stop) {
   saveTodoIds(dayObj, nextIds);
   updateChecklistPanels(dayObj);
   updateStopTodoButton(dayObj, stop);
+}
+
+function clearAllTodoStops(dayObj) {
+  if (!dayObj) return;
+  saveTodoIds(dayObj, []);
+  updateChecklistPanels(dayObj);
+  if (currentStop && currentDay === dayObj) updateStopTodoButton(dayObj, currentStop);
 }
 
 function updateStopTodoButton(dayObj, stop) {
@@ -1160,25 +1784,39 @@ function renderStopContent(dayObj, stop) {
   document.getElementById("stopFootprint").textContent = getFootprintText(stop);
   updateStopTodoButton(dayObj, stop);
 
-  buildGallery(document.getElementById("gallery"), stop);
-  renderPanoramaSection(stop);
-
-  const audioBox = document.getElementById("audioBox");
-  audioBox.innerHTML = "";
-  if (!stop.audio?.length) {
-    audioBox.innerHTML = `<p class="muted">No audio yet.</p>`;
-  } else {
-    stop.audio.forEach((a) => {
-      const wrap = document.createElement("div");
-      wrap.style.marginBottom = "10px";
-      wrap.innerHTML = `<div class="muted">${a.label || "Audio"}</div>`;
-      const audio = document.createElement("audio");
-      audio.controls = true;
-      audio.src = a.src;
-      wrap.appendChild(audio);
-      audioBox.appendChild(wrap);
+  const routeHeading = document.getElementById("stopRouteHeading");
+  const routeSummary = document.getElementById("stopRouteSummary");
+  const routeSteps = document.getElementById("stopRouteSteps");
+  const stopFacts = document.getElementById("stopFacts");
+  if (routeHeading) routeHeading.textContent = stop.routeHeading || "Getting there";
+  if (routeSummary) routeSummary.textContent = stop.routeSummary || "Use the route steps below to reach this stop from the current day area.";
+  if (routeSteps) {
+    routeSteps.innerHTML = "";
+    (stop.steps || []).forEach((step) => {
+      const li = document.createElement("li");
+      li.textContent = step;
+      routeSteps.appendChild(li);
     });
   }
+  if (stopFacts) {
+    const facts = [
+      stop.difficulty ? { label: "Difficulty", value: stop.difficulty } : null,
+      stop.distance ? { label: "Distance", value: stop.distance } : null,
+      stop.duration ? { label: "Time", value: stop.duration } : null
+    ].filter(Boolean);
+    stopFacts.innerHTML = "";
+    stopFacts.classList.toggle("hidden", !facts.length);
+    facts.forEach((fact) => {
+      const item = document.createElement("div");
+      item.className = "stopFact";
+      item.innerHTML = `<span class="stopFactLabel">${fact.label}</span><span class="stopFactValue">${fact.value}</span>`;
+      stopFacts.appendChild(item);
+    });
+  }
+
+  buildGallery(document.getElementById("gallery"), stop);
+  renderPanoramaSection(stop);
+  renderAudioGuide(stop);
 
   const tipsUl = document.getElementById("tips");
   tipsUl.innerHTML = "";
@@ -1197,9 +1835,14 @@ function renderDefaultDayInfo(dayObj) {
   titleEl.textContent = dayObj.name;
   document.getElementById("stopSubtitle").textContent = "Select a marker to open a full stop page.";
   document.getElementById("stopStory").textContent = "Each place opens as its own full page, where you can review photos, story notes, and decide whether to save it for your trip.";
+  document.getElementById("stopRouteHeading").textContent = "Getting there";
+  document.getElementById("stopRouteSummary").textContent = "Open a stop to see access steps, difficulty, and route details.";
+  document.getElementById("stopRouteSteps").innerHTML = `<li>Use the map to choose a stop, then open it for route guidance.</li>`;
+  document.getElementById("stopFacts").innerHTML = "";
+  document.getElementById("stopFacts").classList.add("hidden");
   document.getElementById("stopFootprint").textContent = "Use the map tools for filters, then add the stops you actually want into your own to-do list.";
   document.getElementById("gallery").innerHTML = `<p class="muted">Open a stop to browse photos.</p>`;
-  document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to hear local voices.</p>`;
+  document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to listen to the guide in Chinese, Cantonese, or English.</p>`;
   document.getElementById("tips").innerHTML = `<li>Build your own to-do list by adding stops from their individual pages.</li>`;
   const todoBtn = document.getElementById("stopTodoBtn");
   if (todoBtn) {
@@ -1224,11 +1867,31 @@ function tooltipHtml(stop) {
     `;
   }
 
+  if (stop?.tooltipOnly) {
+    const links = getTooltipLinks(stop);
+    const todoButton = getTooltipTodoButton(stop);
+    return `
+      <div class="tooltipCard tooltipInfoCard">
+        <img class="tooltipImg" src="${getPreviewPhoto(stop)}" alt="${stop.title} preview" />
+        <div class="tooltipBody">
+          <div class="tooltipTitle">${stop.title}</div>
+          ${stop.subtitle ? `<div class="tooltipSubtitle">${stop.subtitle}</div>` : ""}
+          ${stop.openingHours ? `<div class="tooltipLine"><strong>Opening:</strong> ${stop.openingHours}</div>` : ""}
+          ${stop.shortInfo ? `<div class="tooltipLine">${stop.shortInfo}</div>` : ""}
+          ${stop.footprintEstimate ? `<div class="tooltipLine"><strong>Carbon:</strong> ${stop.footprintEstimate}</div>` : ""}
+          ${links ? `<div class="tooltipLinks">${links}</div>` : ""}
+          ${todoButton}
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="tooltipCard">
       <img class="tooltipImg" src="${getPreviewPhoto(stop)}" alt="${stop.title} preview" />
       <div class="tooltipBody">
         <div class="tooltipTitle">${stop.title}</div>
+        ${stop.difficulty ? `<div class="tooltipLine"><strong>Difficulty:</strong> ${stop.difficulty}</div>` : ""}
         <div class="tooltipFootprint">${getFootprintText(stop)}</div>
       </div>
     </div>
@@ -1291,25 +1954,20 @@ function showDay(dayObj) {
       offset: [0, -14]
     };
 
-    if (isTransportStop(stop)) {
-      if (isMobileView()) {
-        marker.bindPopup(tooltipHtml(stop), {
-          className: "transportPopup",
-          autoPan: true,
-          autoPanPadding: [18, 18],
-          closeButton: false,
-          maxWidth: 320,
-          minWidth: 220,
-          offset: [0, -12]
-        });
-      } else {
-        marker.bindTooltip(tooltipHtml(stop), tooltipOptions);
-      }
+    if (isTooltipOnlyStop(stop)) {
+      marker.bindPopup(tooltipHtml(stop), {
+        className: isTransportStop(stop) ? "transportPopup" : "infoPopup",
+        autoPan: true,
+        autoPanPadding: [18, 18],
+        closeButton: !isMobileView(),
+        maxWidth: 320,
+        minWidth: 220,
+        offset: [0, -12]
+      });
       marker.on("click", () => {
         currentStop = null;
         closeStopPage();
-        if (isMobileView()) marker.openPopup();
-        else marker.openTooltip();
+        marker.openPopup();
         map.flyTo(stop.latlng, Math.max(map.getZoom(), 15), { duration: 0.35 });
       });
     } else {
@@ -1533,7 +2191,7 @@ function renderDefaultDayInfo(dayObj) {
   document.getElementById("stopStory").textContent = "Each place opens as its own full page, where you can review photos, story notes, and decide whether to save it for your trip.";
   document.getElementById("stopFootprint").textContent = "Use the map tools for filters, then add the stops you actually want into your own to-do list.";
   document.getElementById("gallery").innerHTML = `<p class="muted">Open a stop to browse photos.</p>`;
-  document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to hear local voices.</p>`;
+  document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to listen to the guide in Chinese, Cantonese, or English.</p>`;
   document.getElementById("tips").innerHTML = `<li>Build your own to-do list by adding stops from their individual pages.</li>`;
   const todoBtn = document.getElementById("stopTodoBtn");
   if (todoBtn) {
@@ -1734,6 +2392,8 @@ function bindMapUi() {
   document.getElementById("utilityTabFilters")?.addEventListener("click", () => setUtilityMode("filters"));
   document.getElementById("utilityTabTodo")?.addEventListener("click", () => setUtilityMode("todo"));
   document.getElementById("utilityTabSuggested")?.addEventListener("click", () => setUtilityMode("suggested"));
+  document.getElementById("todoClearAllBtn")?.addEventListener("click", () => clearAllTodoStops(currentDay));
+  document.getElementById("mobileTodoClearAllBtn")?.addEventListener("click", () => clearAllTodoStops(currentDay));
   document.getElementById("legendSelectAllBtn")?.addEventListener("click", selectAllLegendCategories);
   document.getElementById("legendClearAllBtn")?.addEventListener("click", clearAllLegendCategories);
   document.getElementById("mobileLegendSelectAllBtn")?.addEventListener("click", selectAllLegendCategories);
@@ -1744,6 +2404,22 @@ function bindMapUi() {
   document.getElementById("stopTodoBtn")?.addEventListener("click", () => {
     if (!currentDay || !currentStop) return;
     toggleStopTodo(currentDay, currentStop);
+  });
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-tooltip-todo]");
+    if (!button || !currentDay) return;
+    event.preventDefault();
+    event.stopPropagation();
+
+    const stop = currentDay.stops.find((item) => item.id === button.dataset.tooltipTodo);
+    if (!stop) return;
+
+    toggleStopTodo(currentDay, stop);
+    const order = getTodoOrder(currentDay, stop);
+    const added = order > 0;
+    button.classList.toggle("is-added", added);
+    button.setAttribute("aria-pressed", added ? "true" : "false");
+    button.textContent = added ? `Added as stop #${order}` : "Add to to-do list";
   });
   bindMobileUtilitySheetGestures();
 }

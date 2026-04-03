@@ -159,7 +159,7 @@
               <span>Categories for different kinds of stops</span>
               <span>Flexible trip planning</span>
               <span>Destination stories and photos</span>
-              <span>Local voices and media</span>
+              <span>Audio guides and media</span>
             </div>
           </div>
         </article>
@@ -255,6 +255,9 @@
           </div>
           <button id="todoCloseBtn" class="ghostBtn small">Close</button>
         </div>
+        <div class="todoBulkActions">
+          <button id="todoClearAllBtn" class="ghostBtn small" type="button">Deselect all</button>
+        </div>
         <div id="routeChecklist" class="checkList"></div>
       </aside>
 
@@ -296,6 +299,9 @@
           <div id="mobileLegendFilters" class="legendFilters legendFiltersList"></div>
         </div>
         <div id="utilityTodoPane" class="utilityPane hidden">
+          <div class="todoBulkActions compact">
+            <button id="mobileTodoClearAllBtn" class="ghostBtn small" type="button">Deselect all</button>
+          </div>
           <div id="mobileChecklist" class="checkList"></div>
         </div>
         <div id="utilitySuggestedPane" class="utilityPane hidden">
@@ -323,29 +329,23 @@
                 <p id="stopStory"></p>
               </section>
 
+              <section id="stopRouteCard" class="card">
+                <h3 id="stopRouteHeading">Getting there</h3>
+                <p id="stopRouteSummary" class="muted"></p>
+                <div id="stopFacts" class="stopFacts hidden"></div>
+                <ol id="stopRouteSteps" class="routeSteps"></ol>
+              </section>
+
               <section class="card">
                 <h3>Estimated carbon footprint</h3>
                 <p id="stopFootprint"></p>
               </section>
 
-              <section class="card">
-                <h3>Photos</h3>
-                <div id="gallery" class="gallery"></div>
-              </section>
-
-              <section id="panoramaCard" class="card hidden">
-                <div class="cardHeadInline">
-                  <h3>360 view</h3>
-                  <button id="panoramaOpenBtn" class="ghostBtn small" type="button">Open 360 view</button>
-                </div>
-                <p id="panoramaCaption" class="muted">Pan around this location in an immersive view.</p>
-                <div id="panoramaList" class="panoramaList"></div>
-              </section>
             </div>
 
             <aside class="stopPageSide">
               <section class="card">
-                <h3>Local voices</h3>
+                <h3>Audio guide</h3>
                 <div id="audioBox"></div>
               </section>
 
@@ -354,6 +354,20 @@
                 <ul id="tips" class="list"></ul>
               </section>
             </aside>
+
+            <section id="panoramaCard" class="card stopPageWide hidden">
+              <div class="cardHeadInline">
+                <h3>360 view</h3>
+                <button id="panoramaOpenBtn" class="ghostBtn small" type="button">Open 360 view</button>
+              </div>
+              <p id="panoramaCaption" class="muted">Pan around this location in an immersive view.</p>
+              <div id="panoramaList" class="panoramaList"></div>
+            </section>
+
+            <section class="card stopPageWide">
+              <h3>Photos</h3>
+              <div id="gallery" class="gallery"></div>
+            </section>
           </div>
         </div>
       </section>

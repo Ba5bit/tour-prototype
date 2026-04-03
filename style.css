@@ -83,6 +83,29 @@ button,input,select,textarea{font:inherit}
 .card h3{margin:0 0 12px;font-size:17px;letter-spacing:-.01em}
 .card p{margin:0;line-height:1.6}
 .cardHeadInline{display:flex;justify-content:space-between;align-items:center}
+.audioGuideTabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.audioGuideTab{
+  border:1px solid rgba(216,138,44,.18);
+  background:#fff;
+  color:var(--text);
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer;
+}
+.audioGuideTab.active{
+  background:#fff0d5;
+  border-color:#f0be76;
+  color:#8a5417;
+}
+.audioGuideMeta{font-size:.9rem;line-height:1.5;color:var(--muted);margin-bottom:12px}
+.audioGuidePlayer{
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(120,135,158,.12);
+  background:#fffaf2;
+}
+.audioGuidePlayer audio{width:100%}
 .list{margin:0;padding-left:18px;color:var(--text)}
 .list li{margin:0 0 10px;line-height:1.5}
 .checkItem{grid-template-columns:18px 1fr}
@@ -362,6 +385,9 @@ body.panorama-open{overflow:hidden}
 .legendBulkActions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
 .legendBulkActions.compact{margin:0 0 12px}
 .legendBulkActions .ghostBtn.small{background:#fff}
+.todoBulkActions{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.todoBulkActions.compact{margin:0 0 12px}
+.todoBulkActions .ghostBtn.small{background:#fff}
 .legendStaticItem,.legendFilterRow{display:flex;align-items:center;gap:12px;border-radius:14px}
 .legendStaticItem img,.legendFilterRow img{width:24px;height:24px;object-fit:contain;flex:0 0 24px}
 .legendStaticItem span,.legendFilterRow span{font-size:1.02rem;line-height:1.25}
@@ -404,7 +430,7 @@ body.panorama-open{overflow:hidden}
   transform:translateY(18px);
 }
 .stopPageShell{
-  max-width:1380px;
+  max-width:1500px;
   margin:0 auto;
   padding:20px 20px 40px;
   opacity:0;
@@ -416,15 +442,53 @@ body.panorama-open{overflow:hidden}
   transform:translateY(0) scale(1);
 }
 .stopPageTopbar{display:flex;justify-content:space-between;gap:12px;margin-bottom:18px;position:sticky;top:0;padding-top:6px;background:linear-gradient(180deg,rgba(246,243,238,.9) 72%, rgba(246,243,238,0));z-index:2}
-.stopPageGrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.72fr);gap:20px;align-items:start}
+.stopPageGrid{display:grid;grid-template-columns:minmax(0,1.92fr) minmax(320px,.62fr);gap:20px;align-items:start}
 .stopPageHero h1{font-size:clamp(2rem,3.3vw,4rem);line-height:.98;margin:16px 0 8px;max-width:14ch}
 .stopPageMain,.stopPageSide{display:grid;gap:18px}
+.stopPageWide{grid-column:1 / -1}
+.stopFacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0 0}
+.stopFacts.hidden{display:none}
+.stopFact{padding:12px 14px;border-radius:16px;background:#fff7eb;border:1px solid rgba(216,138,44,.14)}
+.stopFactLabel{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#a46b27;font-weight:800;margin-bottom:5px}
+.stopFactValue{display:block;font-size:.98rem;line-height:1.35;color:#2a3642;font-weight:700}
+.routeSteps{margin:14px 0 0;padding-left:18px;display:grid;gap:10px}
+.routeSteps li{line-height:1.55;color:#314457}
 .tooltipCard{width:280px;max-width:280px;white-space:normal;overflow:visible}
 .tooltipImg{display:block;width:100%;height:124px;object-fit:cover;border-radius:14px;margin-bottom:10px}
 .tooltipBody{display:grid;gap:8px}
 .tooltipTitle{font-weight:800;font-size:1rem;line-height:1.2;white-space:normal;word-break:break-word}
 .tooltipSubtitle{font-size:.88rem;line-height:1.35;color:#6a7a89}
 .tooltipFootprint{font-size:.9rem;line-height:1.35;color:#4e6172;white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+.tooltipInfoCard{width:300px;max-width:300px}
+.tooltipLine{font-size:.88rem;line-height:1.4;color:#33485b}
+.tooltipLinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.tooltipLink{
+  display:inline-flex;
+  align-items:center;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#fff4e0;
+  color:#8a5417;
+  font-size:.78rem;
+  font-weight:700;
+  text-decoration:none;
+}
+.tooltipTodoBtn{
+  width:100%;
+  margin-top:4px;
+  border:1px solid rgba(216,138,44,.24);
+  background:rgba(255,249,241,.96);
+  color:#8a5417;
+  border-radius:16px;
+  padding:11px 12px;
+  font-size:.84rem;
+  font-weight:800;
+  line-height:1.3;
+  text-align:center;
+  box-shadow:0 10px 22px rgba(216,138,44,.12);
+  cursor:pointer;
+}
+.tooltipTodoBtn.is-added{background:#fff0d5;border-color:#f0be76;color:#8a5417}
 .transportInfoCard{width:300px;max-width:300px;border-radius:20px;background:#fff;box-shadow:0 16px 34px rgba(24,39,75,.16);overflow:hidden}
 .tooltipTransportTag{display:inline-flex;align-items:center;width:max-content;padding:6px 10px;border-radius:999px;background:#fff2df;color:#ba6b16;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .tooltipSteps{display:grid;gap:6px}
@@ -437,8 +501,23 @@ body.panorama-open{overflow:hidden}
 .transportPopup .leaflet-popup-content{margin:0;width:min(320px,calc(100vw - 44px))!important}
 .transportPopup .leaflet-popup-tip{background:rgba(255,255,255,.98)}
 .transportPopup .transportInfoCard{width:100%;max-width:none;border-radius:22px;overflow:hidden;box-shadow:none}
+.infoPopup .leaflet-popup-content-wrapper{border-radius:22px;background:rgba(255,255,255,.98);box-shadow:0 18px 42px rgba(24,39,75,.18);padding:0}
+.infoPopup .leaflet-popup-content{margin:0;width:min(320px,calc(100vw - 44px))!important}
+.infoPopup .leaflet-popup-tip{background:rgba(255,255,255,.98)}
+.infoPopup .tooltipInfoCard{width:100%;max-width:none;border-radius:22px;overflow:hidden;box-shadow:none}
 .utilityFab{display:none}
 .utilitySheet{display:none}
+
+@media (min-width: 861px){
+  .stopPageMain .gallery{
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:16px;
+  }
+
+  .stopPageMain .galleryItem{
+    min-height:340px;
+  }
+}
 
 @media (max-width: 860px){
   .desktopOnly{display:none!important}
@@ -473,6 +552,13 @@ body.panorama-open{overflow:hidden}
   .transportPopup .tooltipBody{padding:14px}
   .transportPopup .tooltipTitle{font-size:1rem}
   .transportPopup .tooltipSubtitle,.transportPopup .tooltipStep{font-size:.84rem}
+  .infoPopup .leaflet-popup-content-wrapper,
+  .infoPopup .leaflet-popup-content,
+  .infoPopup .tooltipInfoCard{display:block!important}
+  .infoPopup .leaflet-popup-content{width:min(280px,calc(100vw - 32px))!important}
+  .infoPopup .tooltipBody{padding:14px}
+  .infoPopup .tooltipTitle{font-size:1rem}
+  .infoPopup .tooltipSubtitle,.infoPopup .tooltipLine{font-size:.84rem}
 }
 
 /* ===== Landing page redesign ===== */
