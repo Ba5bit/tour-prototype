@@ -261,11 +261,21 @@ const day1 = {
       title: "Royal Park Hotel",
       subtitle: "Trip starting point",
       latlng: [22.379924625747798, 114.18855144136442],
-      story: "Starting point for the itinerary in Sha Tin before heading to Tai Po for a cultural and food-focused day trip.",
-      steps: ["Walk to Sha Tin Station to begin Day 1."],
-      photos: [],
+      story: "Royal Park Hotel works well as a tourist base in Sha Tin because it sits right beside Sha Tin Station, links easily into New Town Plaza, and keeps both the riverside district and cross-town transport within easy reach. Official hotel information highlights the location as one of its biggest advantages, with quick rail access, nearby shopping, and easy connections to the cultural stops built into this two-day route.",
+      routeHeading: "Starting from Royal Park Hotel",
+      routeSummary: "For Day 1, use the hotel as a comfortable Sha Tin base, then head straight to Sha Tin Station to begin the Tai Po route by rail.",
+      steps: [
+        "Leave the hotel and follow the connected pedestrian route toward Sha Tin Station.",
+        "Use the station as your main starting hub for the MTR ride to Tai Po Market.",
+        "If needed, pick up breakfast, water, or extra supplies in the plaza area before leaving Sha Tin."
+      ],
+      photos: ["./assets/photos/hotel_1.jpg", "./assets/photos/hotel_2.jpg", "./assets/photos/main_hotel.avif"],
       audio: [],
-      tips: ["Starting near rail transport helps reduce unnecessary taxi use."]
+      tips: [
+        "Staying beside rail and walkable services helps reduce short taxi trips and supports lower-carbon city travel.",
+        "Using a connected hotel base supports SDG 11 by making it easier to explore Sha Tin through public space, rail access, and compact urban movement.",
+        "Packing reusable bottles and buying only what you need before departure supports SDG 12 by reducing single-use waste during the day."
+      ]
     },
     {
       id: "d1-shatin-mtr",
@@ -295,7 +305,7 @@ const day1 = {
       ],
       photos: [],
       audio: [],
-      tips: ["Using one main transfer hub keeps the route efficient and reduces unnecessary backtracking."]
+      tips: ["Using one transfer hub cuts down on repeated extra journeys and keeps the day more transport-efficient."]
     },
     {
       id: "d1-bus-terminus",
@@ -325,7 +335,7 @@ const day1 = {
       ],
       photos: [],
       audio: [],
-      tips: ["Using designated stops reduces random drop-offs and helps manage visitor flow."]
+      tips: ["Using designated stops instead of ad hoc drop-offs helps manage visitor flow and reduces unnecessary roadside disturbance."]
     },
     {
       id: "d1-lamtsuen",
@@ -375,9 +385,9 @@ const day1 = {
       ],
       footprint: "Estimated footprint: 0.4-1.1 kg CO2e if reached by shared bus from Tai Po and completed on foot.",
       tips: [
-        "This is a more exposed ridge walk, so avoid it in poor visibility, rain, or strong heat.",
-        "Carry enough water before leaving Tai Po because there are no convenient resupply points once you are on the ridge.",
-        "The difficulty rating is based on the Hong Kong Tourism Board trail guide for Tai To Yan and the exposed ridge section leading to Pak Tai To Yan."
+        "Stay on established trail lines to avoid widening the ridge path and damaging hillside vegetation.",
+        "Pack out all litter and snack wrappers, because exposed upland routes recover slowly once waste or trampling builds up.",
+        "Low-impact hiking here supports SDG 15 through care for natural landscapes and also supports SDG 12 through responsible outdoor travel habits."
       ]
     },
     {
@@ -404,9 +414,9 @@ const day1 = {
       ],
       footprint: "Estimated footprint: 0.4-1.0 kg CO2e when combined with bus access from Tai Po and the hike itself.",
       tips: [
-        "The route becomes slippery after rain, especially around rocks, steps, and waterfall spray zones.",
-        "Hong Kong Tourism Board notes there are no water refill points or food stalls once you leave Tai Po, so stock up first.",
-        "If trail conditions look poor, treat Bottom Fall as the turnaround point instead of forcing the full ascent."
+        "Waterfall paths are sensitive to erosion, so avoid stepping off the main route or climbing on wet rock beside the formal trail.",
+        "Bring reusables from town and avoid leaving drink bottles or food packaging in the forested stream corridor.",
+        "Careful trail behaviour here supports SDG 15 by reducing pressure on a fragile woodland and stream environment."
       ]
     },
     {
@@ -474,7 +484,6 @@ const day1 = {
         "./assets/photos/buddhas_4.jpg",
         "./assets/photos/buddhas_5.jpg",
         "./assets/photos/buddhas_6.jpg",
-        "./assets/photos/buddhas_7.jpg",
         "./assets/photos/buddhas_8.jpg",
         "./assets/photos/buddhas_9.jpg",
         "./assets/photos/buddhas_10.jpg",
@@ -491,9 +500,9 @@ const day1 = {
       ],
       audio: [],
       tips: [
-        "The climb is steep, so this stop is best kept for later in the day only if energy levels are still good.",
-        "Bring water and wear comfortable shoes because most of the visit involves stairs.",
-        "The monastery supports SDG 11 through protection of living religious heritage and historic temple space."
+        "Respectful behaviour in temple spaces supports SDG 11 by helping protect living heritage, historic structures, and shared cultural memory.",
+        "Keeping noise low and carrying out all litter helps preserve the calmer hillside setting for other visitors and worshippers.",
+        "Choosing rail and walking access to the monastery instead of point-to-point car trips keeps the visit lower-impact."
       ]
     }
   ]
@@ -511,11 +520,21 @@ const day2 = {
       title: "Royal Park Hotel",
       subtitle: "Trip starting point",
       latlng: [22.379924625747798, 114.18855144136442],
-      story: "Start and end point for Day 2 in Sha Tin, allowing most attractions to be reached on foot with minimal transport.",
-      steps: ["Walk from the hotel toward the museum and temple area in Sha Tin."],
-      photos: [],
+      story: "On the Sha Tin day, Royal Park Hotel feels less like a transit node and more like a comfortable base in the middle of the district. With the river, Sha Tin Town Hall, New Town Plaza, and the museum-temple cluster all nearby, it gives visitors a much easier start to a relaxed day of walking, sightseeing, and short hops between attractions.",
+      routeHeading: "Starting from Royal Park Hotel",
+      routeSummary: "For Day 2, most places can be reached on foot from the hotel, so it works well as a slower-paced base for a local Sha Tin day.",
+      steps: [
+        "Step out from the hotel toward the Shing Mun River and civic core of Sha Tin.",
+        "Walk to the Heritage Museum first, then continue on foot to Che Kung Temple, the river promenade, or back toward the plaza area.",
+        "Return here easily at the end of the day without needing a long transfer."
+      ],
+      photos: ["./assets/photos/hotel_1.jpg", "./assets/photos/hotel_2.jpg", "./assets/photos/main_hotel.avif"],
       audio: [],
-      tips: ["Compact itineraries reduce travel fatigue and unnecessary transport use."]
+      tips: [
+        "A hotel base beside rail, footbridges, and everyday services helps make the whole Sha Tin day more walkable and lower-carbon.",
+        "This kind of compact urban stay supports SDG 11 by encouraging access through public transport and connected public space instead of car-dependent movement.",
+        "Choosing a reusable-item routine from the hotel, such as refillables and lighter daily purchasing, supports SDG 12 during the trip."
+      ]
     },
     {
       id: "d2-heritage",
@@ -523,12 +542,20 @@ const day2 = {
       title: "Hong Kong Heritage Museum",
       subtitle: "Main Day 2 attraction",
       latlng: [22.37686464076839, 114.18568034099643],
-      story: "The main cultural anchor of Day 2, offering exhibitions that preserve local art, history, and community memory in a very walkable part of Sha Tin.",
-      steps: ["Visit Hong Kong Heritage Museum"],
-      photos: [],
+      story: "Hong Kong Heritage Museum is one of the easiest major museums to enjoy in Sha Tin, both because of its calm riverside setting and because the museum itself is designed as more than a single-topic visit. Hong Kong Tourism Board describes it as a large museum inspired by the layout of a traditional siheyuan courtyard compound, with twelve galleries exploring Hong Kong culture and the wider South China region. Highlights noted by official sources include Cantonese opera, Lingnan painting, and the well-known Jin Yong gallery, which together make the museum feel broad, local, and tourist-friendly rather than overly academic.",
+      routeHeading: "Getting there from Royal Park Hotel",
+      routeSummary: "The museum is one of the easiest stops on the Sha Tin day and works best as the first major visit before moving on to the temple and riverfront.",
+      steps: [
+        "Leave Royal Park Hotel and walk toward Man Lam Road and the museum area.",
+        "Enter the museum complex and begin with the permanent galleries if you want the best overview of Hong Kong culture.",
+        "Check whether any temporary exhibition is on during your visit, then continue toward the riverside or Che Kung Temple afterward."
+      ],
+      photos: ["./assets/photos/museum_1.jpg", "./assets/photos/museum_2.jpg", "./assets/photos/museum_3.jpg"],
       audio: [],
       tips: [
-        "Museums support SDG 11 by safeguarding cultural heritage and public education."
+        "Museums directly support SDG 11 by safeguarding cultural heritage and making local history accessible to the public.",
+        "Choosing a museum stop within a walkable Sha Tin cluster keeps the day culturally rich without adding much transport impact.",
+        "Supporting heritage venues also strengthens the long-term case for preserving local collections, stories, and community identity."
       ]
     },
     {
@@ -546,7 +573,8 @@ const day2 = {
         "./assets/photos/chekung_4.jpg",
         "./assets/photos/chekung_5.jpg",
         "./assets/photos/chekung_6.jpg",
-        "./assets/photos/chekung_7.jpg"
+        "./assets/photos/chekung_7.jpg",
+        "./assets/photos/chekung_8.jpg"
       ],
       panoramas: [
         { src: "./assets/photos/360/panorama_temple_1.JPG", label: "Temple courtyard" },
@@ -554,9 +582,38 @@ const day2 = {
       ],
       audio: [],
       tips: [
-        "A shorter walking loop improves accessibility and reduces visitor fatigue.",
-        "The temple also supports SDG 11 through preservation of cultural and religious heritage."
+        "Respectful temple visits support SDG 11 by helping preserve religious heritage within everyday community life.",
+        "Walking here from nearby Sha Tin stops keeps the cultural visit low-impact and avoids extra vehicle use.",
+        "Reducing noise, waste, and crowding helps protect the atmosphere of an active place of worship."
       ]
+    },
+    {
+      id: "d2-shingmun-promenade",
+      category: "garden",
+      title: "Shing Mun River Promenade Garden",
+      subtitle: "Riverside promenade stop in Sha Tin",
+      latlng: [22.37712581173113, 114.1899939588966],
+      story: "Shing Mun River Promenade Garden sits along the wide Shing Mun River corridor, one of the most recognizable open-air leisure areas in Sha Tin. Hong Kong Tourism Board describes the riverfront as a peaceful local recreation zone where people come to stroll, jog, cycle, fish, and watch rowers on the water, while the nearby promenade and bridges become especially lively during festival periods such as dragon boat season.",
+      routeSummary: "From the Sha Tin base, this is an easy riverside add-on reached on foot from the hotel, museum, or Che Kung Temple side of the district.",
+      routeHeading: "Getting there from Sha Tin",
+      steps: [
+        "Start from Royal Park Hotel or continue from the Heritage Museum / Che Kung Temple cluster.",
+        "Walk toward the Shing Mun River waterfront and cross over to the promenade near Che Kung Miu Road / Tai Chung Kiu Road.",
+        "Follow the riverside path southward to reach the promenade garden section.",
+        "Continue the walk along the water if you want a longer low-effort Sha Tin loop."
+      ],
+      photos: [
+        "/assets/photos/shing_mun_promenade_1.jpg",
+        "/assets/photos/shing_mun_promenade_2.jpg"
+      ],
+      footprint: "Estimated footprint: 0.1-0.4 kg CO2e when visited as part of the existing Sha Tin walking cluster.",
+      tips: [
+        "Well-used waterfront promenades support SDG 11 by giving the city accessible public space for walking, rest, and everyday recreation.",
+        "Choosing riverside walking instead of additional short rides keeps this part of the day especially low-carbon.",
+        "Keeping the riverfront clean and avoiding litter near the water helps protect the quality of the shared urban landscape."
+      ],
+      websiteUrl: "https://www.gohk.gov.hk/en/spots/spot_detail.php?spot=Shing+Mun+River",
+      websiteLabel: "Official website"
     },
     {
       id: "d2-lionrock",
@@ -582,9 +639,9 @@ const day2 = {
       ],
       footprint: "Estimated footprint: 0.3-0.9 kg CO2e when approached from Sha Tin by short public-transport hops and completed mostly on foot.",
       tips: [
-        "The summit approach is steeper and more exposed than the heritage walk stops in Sha Tin, so treat it as a separate higher-effort add-on.",
-        "This difficulty estimate is an inference from AFCD's descriptions of the summit trails, the eastern stone path, and the steeper Lion Rock sections in the park.",
-        "Start early if the weather is humid, and avoid ridge walking when storms or low visibility are forecast."
+        "Stay on marked trails to reduce erosion on one of Hong Kong's best-known hillside routes.",
+        "Take all litter back down with you, because high-visibility peaks are especially vulnerable to visual and ecological damage from waste.",
+        "Responsible hiking here supports SDG 11 through care for an iconic shared landscape and SDG 15 through lower-impact use of natural terrain."
       ]
     }
   ]
@@ -603,7 +660,7 @@ day2.stops.push(
     footprintEstimate: "Estimated meal footprint: moderate, around 1.8-2.6 kg CO2e for a typical pork or beef noodle meal.",
     websiteUrl: "https://www.google.com/maps?q=22.384947849433182,114.19099029999998",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/shingkee_noodles.jpg"]
   },
   {
     id: "d2-simplylife",
@@ -617,7 +674,7 @@ day2.stops.push(
     footprintEstimate: "Estimated meal footprint: low-to-moderate, around 0.8-1.6 kg CO2e for bakery, salad, or lighter cafe meals.",
     websiteUrl: "https://www.google.com/maps?q=22.38237836875854,114.18833909999998",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/simply_life_bakery.jpg"]
   },
   {
     id: "d2-newtownplaza",
@@ -630,7 +687,7 @@ day2.stops.push(
     shortInfo: "Large mall with diverse dining and supermarket options, making it the main practical hub near the museum and Che Kung Temple route.",
     websiteUrl: "https://www.newtownplaza.com.hk/",
     websiteLabel: "Official website",
-    photos: []
+    photos: ["./assets/photos/newtownplaza.jpg"]
   },
   {
     id: "d2-7eleven-chekung",
@@ -643,7 +700,7 @@ day2.stops.push(
     shortInfo: "Handy for a quick water or snack pickup right by the Che Kung Temple station area.",
     websiteUrl: "https://www.google.com/maps?q=22.374648255009102,114.18594872461193",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/711.png"]
   },
   {
     id: "d2-7eleven-shatin",
@@ -656,7 +713,7 @@ day2.stops.push(
     shortInfo: "Useful for quick supplies around the Sha Tin rail hub before heading out or returning.",
     websiteUrl: "https://www.google.com/maps?q=22.382725232491214,114.18744479130169",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/711.png"]
   },
   {
     id: "d2-circlek-jatmin",
@@ -669,7 +726,7 @@ day2.stops.push(
     shortInfo: "A 24-hour option near the Sha Tin riverside neighborhood if you need essentials late in the day.",
     websiteUrl: "https://www.google.com/maps?q=22.377222362928315,114.19115936931037",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/circle_k.png"]
   },
   {
     id: "d2-toilet-shatintau",
@@ -724,7 +781,7 @@ day1.stops.push(
     shortInfo: "Directly connected to Sha Tin Station and a practical place to pick up drinks or snacks before heading to Ten Thousand Buddhas Monastery.",
     websiteUrl: "https://www.google.com/maps?q=22.382757569880205,114.18756474096665",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/citylink.jpg"]
   },
   {
     id: "d1-yata",
@@ -750,7 +807,7 @@ day1.stops.push(
     shortInfo: "Convenient for a last-minute drink or snack near the Sha Tin monastery approach.",
     websiteUrl: "https://www.google.com/maps?q=22.384575193043453,114.19072645767241",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/711.png"]
   },
   {
     id: "d1-toilet-sheungpaitau",
@@ -793,7 +850,7 @@ day1.stops.push(
     footprintEstimate: "Estimated meal footprint: moderate-to-high, around 1.5-3.0 kg CO2e depending on how meat-heavy the chosen dishes are.",
     websiteUrl: "https://www.google.com/maps?q=22.446059247421854,114.16668750955182",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/food_market.jpg"]
   },
   {
     id: "d1-lamkee-dimsum",
@@ -805,7 +862,7 @@ day1.stops.push(
     openingHours: "Hours vary",
     shortInfo: "A convenient Tai Po stop for a lighter sit-down meal before continuing through the old market area.",
     footprintEstimate: "Estimated meal footprint: around 0.9-1.8 kg CO2e depending on whether you choose mostly steamed dishes or meat-heavy baskets.",
-    photos: []
+    photos: ["./assets/photos/lam_kee.jpg"]
   },
   {
     id: "d1-tungkee-noodles",
@@ -817,7 +874,7 @@ day1.stops.push(
     openingHours: "Hours vary",
     shortInfo: "A quick local-style noodle option close to the Tai Po Market food cluster and transport links.",
     footprintEstimate: "Estimated meal footprint: around 1.0-2.0 kg CO2e depending on broth choice and whether you order meat or fishball toppings.",
-    photos: []
+    photos: ["./assets/photos/tung_kee.jpg"]
   },
   {
     id: "d1-grandmas-tofu-pudding",
@@ -829,7 +886,7 @@ day1.stops.push(
     openingHours: "Hours vary",
     shortInfo: "A gentle dessert break for tofu pudding and lighter snacks in the Tai Po Market cluster.",
     footprintEstimate: "Estimated meal footprint: around 0.2-0.6 kg CO2e for a tofu-based dessert or light snack.",
-    photos: []
+    photos: ["./assets/photos/tofu.png"]
   },
   {
     id: "d1-taiwo-plaza",
@@ -842,7 +899,7 @@ day1.stops.push(
     shortInfo: "A practical stop near the railway museum area for food, groceries, and indoor supplies.",
     websiteUrl: "https://www.linkhk.com/",
     websiteLabel: "Official website",
-    photos: []
+    photos: ["./assets/photos/taiwo_plaza.jpg"]
   },
   {
     id: "d1-parknshop-honglokyuen",
@@ -855,7 +912,7 @@ day1.stops.push(
     shortInfo: "Useful if you want to buy supplies before or after heading out toward Lam Tsuen.",
     websiteUrl: "https://www.google.com/maps?q=22.46222185471413,114.15230114418102",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/parknshop.jpg"]
   },
   {
     id: "d1-7eleven-taiyuen",
@@ -868,7 +925,7 @@ day1.stops.push(
     shortInfo: "Convenient for quick drinks or snacks near the railway museum side of Tai Po.",
     websiteUrl: "https://www.google.com/maps?q=22.45548786423923,114.16815563862076",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/711.png"]
   },
   {
     id: "d1-7eleven-taiwo",
@@ -881,7 +938,7 @@ day1.stops.push(
     shortInfo: "A practical quick-stop convenience store close to the Tai Wo Plaza area.",
     websiteUrl: "https://www.google.com/maps?q=22.450532203271074,114.1601681153448",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/711.png"]
   },
   {
     id: "d1-circlek-fortune",
@@ -894,7 +951,7 @@ day1.stops.push(
     shortInfo: "Useful for fast supplies in the Tai Po town center area.",
     websiteUrl: "https://www.google.com/maps?q=22.452889637322233,114.16804413752509",
     websiteLabel: "Google Maps",
-    photos: []
+    photos: ["./assets/photos/circle_k.png"]
   },
   {
     id: "d1-kwanyik",
@@ -976,11 +1033,11 @@ const routePlans = {
 const landingDayMeta = {
   day1: {
     title: "Day 1 - Tai Po",
-    summary: "Village heritage, temple streets, railway stories, and a greener day out linked by public transport."
+    summary: "Village heritage, temple streets, railway stories, practical food stops, and optional hiking add-ons linked by public transport."
   },
   day2: {
     title: "Day 2 - Sha Tin",
-    summary: "Museum visits, riverside walking, temple heritage, and a compact route centered around Sha Tin."
+    summary: "Museum visits, temple heritage, riverside walking, city conveniences, and optional Lion Rock exploration around Sha Tin."
   }
 };
 
@@ -1819,12 +1876,28 @@ function renderStopContent(dayObj, stop) {
   renderAudioGuide(stop);
 
   const tipsUl = document.getElementById("tips");
+  const sdgNote = document.getElementById("sdgNote");
   tipsUl.innerHTML = "";
   (stop.tips || []).forEach((t) => {
     const li = document.createElement("li");
     li.textContent = t;
     tipsUl.appendChild(li);
   });
+  if (sdgNote) {
+    const tipText = (stop.tips || []).join(" ");
+    const notes = [];
+    if (tipText.includes("SDG 11")) {
+      notes.push("SDG 11 focuses on sustainable cities and communities, including heritage protection, walkable public space, and inclusive urban life.");
+    }
+    if (tipText.includes("SDG 12")) {
+      notes.push("SDG 12 focuses on responsible consumption and production, such as reducing waste, reusing items, and choosing lower-impact travel habits.");
+    }
+    if (tipText.includes("SDG 15")) {
+      notes.push("SDG 15 focuses on life on land, including care for trails, forests, streams, and biodiversity.");
+    }
+    sdgNote.textContent = notes.join(" ");
+    sdgNote.classList.toggle("hidden", !notes.length);
+  }
 }
 
 function renderDefaultDayInfo(dayObj) {
@@ -1844,6 +1917,8 @@ function renderDefaultDayInfo(dayObj) {
   document.getElementById("gallery").innerHTML = `<p class="muted">Open a stop to browse photos.</p>`;
   document.getElementById("audioBox").innerHTML = `<p class="muted">Open a stop to listen to the guide in Chinese, Cantonese, or English.</p>`;
   document.getElementById("tips").innerHTML = `<li>Build your own to-do list by adding stops from their individual pages.</li>`;
+  document.getElementById("sdgNote").textContent = "";
+  document.getElementById("sdgNote").classList.add("hidden");
   const todoBtn = document.getElementById("stopTodoBtn");
   if (todoBtn) {
     todoBtn.classList.remove("is-added");
@@ -1870,9 +1945,12 @@ function tooltipHtml(stop) {
   if (stop?.tooltipOnly) {
     const links = getTooltipLinks(stop);
     const todoButton = getTooltipTodoButton(stop);
+    const previewImage = stop.category === "toilet"
+      ? ""
+      : `<img class="tooltipImg" src="${getPreviewPhoto(stop)}" alt="${stop.title} preview" />`;
     return `
       <div class="tooltipCard tooltipInfoCard">
-        <img class="tooltipImg" src="${getPreviewPhoto(stop)}" alt="${stop.title} preview" />
+        ${previewImage}
         <div class="tooltipBody">
           <div class="tooltipTitle">${stop.title}</div>
           ${stop.subtitle ? `<div class="tooltipSubtitle">${stop.subtitle}</div>` : ""}

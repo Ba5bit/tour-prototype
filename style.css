@@ -108,6 +108,8 @@ button,input,select,textarea{font:inherit}
 .audioGuidePlayer audio{width:100%}
 .list{margin:0;padding-left:18px;color:var(--text)}
 .list li{margin:0 0 10px;line-height:1.5}
+.sdgNote{margin:12px 0 0;line-height:1.55}
+.sdgNote.hidden{display:none}
 .checkItem{grid-template-columns:18px 1fr}
 .checkItem input{margin-top:3px;accent-color:var(--accent)}
 .gallery{
